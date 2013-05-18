@@ -19,6 +19,10 @@ Neuron* Synapse::getTarget() {
     return target;
 }
 
+void Synapse::setTarget(Neuron* target) {
+    this->target = target;
+}
+
 void Synapse::depreciate(float value) {
     // Decrease weight/lifespan by something related to the value (or something constant).
 }

@@ -4,18 +4,19 @@
 Neuron::Neuron()
 {
     logger (file, "Neuron Created.\n");
-    position[0] = -1;
-    position[1] = -1;
-    position[2] = -1;
+    position[0] = -10;
+    position[1] = -10;
+    position[2] = -10;
     alive = true;
     cue = 0;  // "Random" cue value for unspecified cues.
     for (int i = 0; i < MAX_INPUTS; i++) {
         dendrites[i] = 0;
     }
+    numDendritesActive = 0;
     threshold = THRESHOLD;
     recoveryPeriod = RECOVERY_PERIOD;
     recoveryThreshold = RECOVERY_THRESHOLD;
-    axon = new Axon(-1, -1, -1);
+    axon = new Axon(-10, -10, -10);
 }
 
 Neuron::Neuron(int x, int y, int z) {
@@ -29,6 +30,7 @@ Neuron::Neuron(int x, int y, int z) {
     for (int i = 0; i < MAX_INPUTS; i++) {
         dendrites[i] = 0;
     }
+    numDendritesActive = 0;
     threshold = THRESHOLD;
     recoveryPeriod = RECOVERY_PERIOD;
     recoveryThreshold = RECOVERY_THRESHOLD;
@@ -47,6 +49,7 @@ Neuron::Neuron(int x, int y, int z, float cue) {
     for (int i = 0; i < MAX_INPUTS; i++) {
         dendrites[i] = 0;
     }
+    numDendritesActive = 0;
     threshold = THRESHOLD;
     recoveryPeriod = RECOVERY_PERIOD;
     recoveryThreshold = RECOVERY_THRESHOLD;
@@ -55,12 +58,16 @@ Neuron::Neuron(int x, int y, int z, float cue) {
 
 void Neuron::acceptSignal(float value) {
     // Append this value to the array of values to be processed.
+    dendrites[numDendritesActive] = value;
 }
 
 float Neuron::process() {
     // Process the queued input values from the dendrites and return that value.
     float result = 0;
 
+    // Empty the dendrite values and reset counter.
+
+    // Return result.
     return result;
 }
 

@@ -58,12 +58,25 @@ void Axon::createSynapses() {
     // Create Synapses to add to the array and link them to the nearby Neurons.  Might need a way to have access to the Reservoir's Neuron array.
 }
 
+void Axon::createSynapse(Neuron* target) {
+    // Create a Synapse with the specified target.
+}
+
 void Axon::removeSynpase() {
     // Check the array for any Synapses that need removing (below threshold).
 }
 
 void Axon::passSignal(float value) {
     // Iterates through the array of synapses and calls their trigger().
+    int temp = numSynapses;
+    for (int i = 0; i < temp; i++) {
+        if (synapse[i] == NULL) {
+            temp += 1;
+        }
+        else {
+            synapse[i]->trigger(value);
+        }
+    }
 }
 
 Synapse* Axon::getSynapse(int index) {
@@ -76,5 +89,10 @@ int Axon::getNumSynapses() {
 
 Axon::~Axon()
 {
+    for (int i = 0; i < maxSynapses; i++) {
+        if (synapse[i] != NULL) {
+            delete synapse[i];
+        }
+    }
     logger (file, "Axon destroyed.\n");
 }

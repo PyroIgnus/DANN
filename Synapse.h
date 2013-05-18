@@ -15,6 +15,7 @@ class Synapse
 
         void trigger(float value);
         Neuron* getTarget();
+        void setTarget(Neuron* target);
         void depreciate(float value);
 
         /** Default destructor */

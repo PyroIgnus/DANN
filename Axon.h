@@ -7,6 +7,7 @@
 #include <vector>
 
 class Synapse;
+class Neuron;
 
 class Axon
 {
@@ -18,8 +19,9 @@ class Axon
 
         void setDirection();
         void growDirection();
-        void createSynapses();
-        void removeSynpase();
+        void createSynapses();  // This should create the new Synapse objects in the array and connect them only to Neurons in the positive xyz region (within the Reservoir).
+        void createSynapse(Neuron* target);
+        void removeSynpase();   // This should remove the Synapse object from the array.
         void passSignal(float value);
         Synapse* getSynapse (int index);
         int getNumSynapses();

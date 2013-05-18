@@ -40,6 +40,7 @@ class Neuron
         bool alive;
         int position[3];
         float dendrites[MAX_INPUTS];
+        int numDendritesActive;
         int threshold;
         int recoveryPeriod;
         int recoveryThreshold;

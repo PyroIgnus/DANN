@@ -37,14 +37,16 @@ NeuralNetwork::NeuralNetwork(char* filename)
 
 void NeuralNetwork::linkSensor(Neuron* sensor, Neuron* target) {
     // Link the sensor Neuron to target Neuron by means of axon and synapses.
+    sensor->getAxon()->createSynapse(target);
 }
 
 void NeuralNetwork::linkMotor(Neuron* target, Neuron* motor) {
     // Link the target Neuron to motor Neuron by means of axon and synapses.
+    target->getAxon()->createSynapse(motor);
 }
 
 void NeuralNetwork::train() {
-    // Method to train.
+    // Method to train.  Probably specific to what the DANN is being trained for.
 }
 
 void NeuralNetwork::updateSensors() {
