@@ -22,9 +22,6 @@ Axon::Axon(int x, int y, int z)
     numSynapses = 0;
     head = NULL;
     tail = NULL;
-    for (int i = 0; i < maxSynapses; i++) {
-        insertSynapse(new Synapse());
-    }
 //    for (int i = 0; i < maxSynapses; i++) {
 //        synapse[i] = NULL;
 //    }
