@@ -20,6 +20,8 @@ class NeuralNetwork
          */
         NeuralNetwork(char* filename);
 
+        void linkSensor(Neuron* sensor, Neuron* target);
+        void linkMotor(Neuron* target, Neuron* motor);
         void train();
         void updateSensors();
         void process();

@@ -14,18 +14,6 @@ class Reservoir
         /** Default constructor */
         Reservoir(int resDimension);
 
-        /**
-         *
-         *
-         */
-        void linkSensor(Neuron* sensor, Neuron* target);
-
-        /**
-         *
-         *
-         */
-        void linkMotor(Neuron* target, Neuron* motor);
-
         Neuron* getNeuron (int x, int y, int z);
 
         /** Default destructor */

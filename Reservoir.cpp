@@ -22,14 +22,6 @@ Reservoir::Reservoir(int resDimension)
     logger (file, "Reservoir Successfully Created.\n");
 }
 
-void Reservoir::linkSensor(Neuron* sensor, Neuron* target) {
-    // Link the sensor Neuron to target Neuron by means of axon and synapses.
-}
-
-void Reservoir::linkMotor(Neuron* target, Neuron* motor) {
-    // Link the target Neuron to motor Neuron by means of axon and synapses.
-}
-
 Neuron* Reservoir::getNeuron (int x, int y, int z) {
     return neurons[x][y][z];
 }
