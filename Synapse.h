@@ -3,6 +3,7 @@
 
 #include "Neuron.h"
 #include "global.h"
+#include "utils.h"
 
 class Neuron;
 
@@ -16,6 +17,8 @@ class Synapse
         void trigger(float value);
         Neuron* getTarget();
         void setTarget(Neuron* target);
+        Synapse* getNext();
+        void setNext(Synapse* next);
         void depreciate(float value);
 
         /** Default destructor */
@@ -25,6 +28,7 @@ class Synapse
 
         float weight;
         Neuron* target;
+        Synapse* next;
 
 };
 

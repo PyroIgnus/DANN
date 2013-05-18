@@ -25,6 +25,7 @@ class NeuralNetwork
         void train();
         void updateSensors();
         void process();
+        void cueEvolvingBackPropagation(Neuron* motor, bool reinforce);
         void determineState();
 
         /** Default destructor */

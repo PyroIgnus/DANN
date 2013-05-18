@@ -8,7 +8,7 @@ Neuron::Neuron()
     position[1] = -10;
     position[2] = -10;
     alive = true;
-    cue = 0;  // "Random" cue value for unspecified cues.
+    cue = 0;
     for (int i = 0; i < MAX_INPUTS; i++) {
         dendrites[i] = 0;
     }

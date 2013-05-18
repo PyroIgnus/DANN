@@ -8,6 +8,7 @@ Synapse::Synapse()
 Synapse::Synapse(Neuron* target) {
     this->target = target;
     weight = INITIAL_SYNAPSE_WEIGHT;
+    next = NULL;
 }
 
 void Synapse::trigger(float value) {
@@ -23,11 +24,19 @@ void Synapse::setTarget(Neuron* target) {
     this->target = target;
 }
 
+Synapse* Synapse::getNext() {
+    return next;
+}
+
+void Synapse::setNext(Synapse* next) {
+    this->next = next;
+}
+
 void Synapse::depreciate(float value) {
     // Decrease weight/lifespan by something related to the value (or something constant).
 }
 
 Synapse::~Synapse()
 {
-    //dtor
+    delete next;
 }

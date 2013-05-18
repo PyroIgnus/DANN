@@ -19,11 +19,13 @@ class Axon
 
         void setDirection();
         void growDirection();
+        void forceLink(Neuron* target);
         void createSynapses();  // This should create the new Synapse objects in the array and connect them only to Neurons in the positive xyz region (within the Reservoir).
-        void createSynapse(Neuron* target);
-        void removeSynpase();   // This should remove the Synapse object from the array.
+        void retractSynapses();   // This will iterate through the linked list and remove Synapses below threshold.
+        void removeSynapse(Synapse* target);
+        void insertSynapse(Synapse* target);
         void passSignal(float value);
-        Synapse* getSynapse (int index);
+        Synapse* getSynapseHead ();
         int getNumSynapses();
 
 
@@ -35,10 +37,11 @@ class Axon
         int maxAxonLength;
         int maxSynapses;
 
-        float cue;
         int position[MAX_AXON_LENGTH][3];
         float direction[3];
-        Synapse* synapse[MAX_SYNAPSES]; // There can not be any empty synapse elements between non-empty elements.  If this is unavoidable or really slow, find another way to do this and tell me.
+        Synapse* head;
+        Synapse* tail;
+        //Synapse* synapse[MAX_SYNAPSES]; // There can not be any empty synapse elements between non-empty elements.  If this is unavoidable or really slow, find another way to do this and tell me.
         int numSynapses;
 };
 

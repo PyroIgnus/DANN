@@ -37,12 +37,12 @@ NeuralNetwork::NeuralNetwork(char* filename)
 
 void NeuralNetwork::linkSensor(Neuron* sensor, Neuron* target) {
     // Link the sensor Neuron to target Neuron by means of axon and synapses.
-    sensor->getAxon()->createSynapse(target);
+    sensor->getAxon()->forceLink(target);
 }
 
 void NeuralNetwork::linkMotor(Neuron* target, Neuron* motor) {
     // Link the target Neuron to motor Neuron by means of axon and synapses.
-    target->getAxon()->createSynapse(motor);
+    target->getAxon()->forceLink(motor);
 }
 
 void NeuralNetwork::train() {
@@ -60,6 +60,8 @@ void NeuralNetwork::process() {
     std::list<Neuron*> processed;
     Neuron* current;
     Neuron* check;
+    Synapse* head;
+    Synapse* curr;
     bool isUnique;
 
     for (int i = 0; i < numSensors; i++) {
@@ -70,10 +72,12 @@ void NeuralNetwork::process() {
 
         // Process the next Neuron.
         current = unprocessed.front();
+        head = current->getAxon()->getSynapseHead();
+        curr = head;
         // Add new Neurons to the queue if necessary
         isUnique = true;
         for (int i = 0; i < current->getAxon()->getNumSynapses(); i++) {
-            check = current->getAxon()->getSynapse(i)->getTarget();
+            check = curr->getTarget();
             // Check for duplicates before pushing new Neurons into the queue.
             for (std::list<Neuron*>::iterator it = processed.begin(); it != processed.end(); it++) {
                 if ((*it)->equals(check)) {
@@ -84,6 +88,7 @@ void NeuralNetwork::process() {
             if (isUnique) {
                 unprocessed.push(check);
             }
+            curr = curr->getNext();
         }
         // Send an action potential if necessary.
         current->activatePotential(current->process());
@@ -98,13 +103,20 @@ void NeuralNetwork::process() {
             for (int j = 0; j < resDimension; j++) {
                 for (int k = 0; k < resDimension; k++) {
                     current = reservoir[res]->getNeuron(i, j, k);
+                    head = current->getAxon()->getSynapseHead();
+                    curr = head;
                     for (int i = 0; i < current->getAxon()->getNumSynapses(); i++) {
-                        current->getAxon()->getSynapse(i)->depreciate(0.1);
+                        curr->depreciate(0.1);
+                        curr = curr->getNext();
                     }
                 }
             }
         }
     }
+}
+
+void NeuralNetwork::cueEvolvingBackPropagation(Neuron* motor, bool reinforce) {
+    // Back propagate starting from the target motor Neuron and change cues accordingly.
 }
 
 void NeuralNetwork::determineState() {

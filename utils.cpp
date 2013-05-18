@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 /**
- * @brief helper funtion used to print
+ * @brief helper function used to print
  * @return void
  */
 void logger(FILE *file, char *message)
