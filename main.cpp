@@ -1,3 +1,10 @@
+/*
+    Dynamic Artificial Neural Network
+    Created by Jonathon Wong
+    Collaborators: Rose Li, Adam Suban-Loewen, Andrew Pelegris, Michael Chiou
+    Date: 2013
+*/
+
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
@@ -19,7 +26,7 @@ int main(int argc, char *argv[]) {
     printf ("Starting Neural Network:\n");
     NeuralNetwork* net = new NeuralNetwork();
 
-    //
+    net->process();
 
     printf ("Ending Neural Network.\n");
     delete net;

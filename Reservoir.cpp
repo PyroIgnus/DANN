@@ -30,6 +30,10 @@ void Reservoir::linkMotor(Neuron* target, Neuron* motor) {
     // Link the target Neuron to motor Neuron by means of axon and synapses.
 }
 
+Neuron* Reservoir::getNeuron (int x, int y, int z) {
+    return neurons[x][y][z];
+}
+
 Reservoir::~Reservoir()
 {
     logger (file, "Destroying Reservoir.\n");

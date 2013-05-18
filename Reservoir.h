@@ -26,6 +26,8 @@ class Reservoir
          */
         void linkMotor(Neuron* target, Neuron* motor);
 
+        Neuron* getNeuron (int x, int y, int z);
+
         /** Default destructor */
         virtual ~Reservoir();
     protected:

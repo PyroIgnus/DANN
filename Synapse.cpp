@@ -15,6 +15,14 @@ void Synapse::trigger(float value) {
     // Increment weight/lifespan.
 }
 
+Neuron* Synapse::getTarget() {
+    return target;
+}
+
+void Synapse::depreciate(float value) {
+    // Decrease weight/lifespan by something related to the value (or something constant).
+}
+
 Synapse::~Synapse()
 {
     //dtor

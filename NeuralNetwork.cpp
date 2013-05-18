@@ -1,4 +1,6 @@
 #include "NeuralNetwork.h"
+#include <queue>
+#include <list>
 
 // Default Constructor
 NeuralNetwork::NeuralNetwork()
@@ -38,13 +40,61 @@ void NeuralNetwork::train() {
 }
 
 void NeuralNetwork::updateSensors() {
-    // Update sensor Neuron dendrite values.
+    // Update sensor Neuron dendrite values.  Specific to each Sensor.
+
 }
 
 void NeuralNetwork::process() {
     // Commence a breadth first signal pass starting from the sensor Neurons.
+    std::queue<Neuron*> unprocessed;
+    std::list<Neuron*> processed;
+    Neuron* current;
+    Neuron* check;
+    bool isUnique;
+
+    for (int i = 0; i < numSensors; i++) {
+        unprocessed.push(sensors[i]);
+    }
+
+    while (!unprocessed.empty()) {
+
+        // Process the next Neuron.
+        current = unprocessed.front();
+        // Add new Neurons to the queue if necessary
+        isUnique = true;
+        for (int i = 0; i < current->getAxon()->getNumSynapses(); i++) {
+            check = current->getAxon()->getSynapse(i)->getTarget();
+            // Check for duplicates before pushing new Neurons into the queue.
+            for (std::list<Neuron*>::iterator it = processed.begin(); it != processed.end(); it++) {
+                if ((*it)->equals(check)) {
+                    it = processed.end();
+                    isUnique = false;
+                }
+            }
+            if (isUnique) {
+                unprocessed.push(check);
+            }
+        }
+        // Send an action potential if necessary.
+        current->activatePotential(current->process());
+        // Remove Neuron as it has just been processed.
+        unprocessed.pop();
+
+    }
 
     // Decrease the lifespan of all Synapses.
+    for (int res = 0; res < numReservoirs; res++) {
+        for (int i = 0; i < resDimension; i++) {
+            for (int j = 0; j < resDimension; j++) {
+                for (int k = 0; k < resDimension; k++) {
+                    current = reservoir[res]->getNeuron(i, j, k);
+                    for (int i = 0; i < current->getAxon()->getNumSynapses(); i++) {
+                        current->getAxon()->getSynapse(i)->depreciate(0.1);
+                    }
+                }
+            }
+        }
+    }
 }
 
 void NeuralNetwork::determineState() {

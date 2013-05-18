@@ -20,6 +20,7 @@ Axon::Axon(int x, int y, int z)
     direction[0] = 0;
     direction[1] = 0;
     direction[2] = 0;
+    numSynapses = 0;
     for (int i = 0; i < maxSynapses; i++) {
         synapse[i] = NULL;
     }
@@ -35,10 +36,11 @@ Axon::Axon(int x, int y, int z, float cue)
     position[0][0] = x;
     position[0][1] = y;
     position[0][2] = z;
-    this->cue = cue;  // "Random" cue value for unspecified cues.
+    this->cue = cue;
     direction[0] = 0;
     direction[1] = 0;
     direction[2] = 0;
+    numSynapses = 0;
     for (int i = 0; i < maxSynapses; i++) {
         synapse[i] = NULL;
     }
@@ -62,6 +64,14 @@ void Axon::removeSynpase() {
 
 void Axon::passSignal(float value) {
     // Iterates through the array of synapses and calls their trigger().
+}
+
+Synapse* Axon::getSynapse(int index) {
+    return synapse[index];
+}
+
+int Axon::getNumSynapses() {
+    return numSynapses;
 }
 
 Axon::~Axon()
