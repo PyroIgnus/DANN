@@ -47,6 +47,9 @@ void NeuralNetwork::linkMotor(Neuron* target, Neuron* motor) {
 
 void NeuralNetwork::train() {
     // Method to train.  Probably specific to what the DANN is being trained for.
+    updateSensors();
+    process();
+    // use cueEvolveBackPropagation() to update cues.
 }
 
 void NeuralNetwork::updateSensors() {
@@ -115,8 +118,46 @@ void NeuralNetwork::process() {
     }
 }
 
-void NeuralNetwork::cueEvolvingBackPropagation(Neuron* motor, bool reinforce) {
+void NeuralNetwork::updateCues(Neuron* motor, bool reinforce) {
     // Back propagate starting from the target motor Neuron and change cues accordingly.
+    // Commence a backward breadth first search starting from the motor Neuron.
+    std::queue<Neuron*> unprocessed;
+    std::list<Neuron*> processed;
+    Neuron* current;
+    Neuron* check;
+    bool isUnique;
+    float change = CUE_CHANGE;
+    if (!reinforce) {
+        change = change * (-1);
+    }
+
+    unprocessed.push(motor);
+
+    while (!unprocessed.empty()) {
+
+        // Process the next Neuron.
+        current = unprocessed.front();
+        // Add new Neurons to the queue if necessary
+        isUnique = true;
+        for (int i = 0; i < current->getConnSize(); i++) {
+            check = current->getConnection(i);
+            // Check for duplicates before pushing new Neurons into the queue.
+            for (std::list<Neuron*>::iterator it = processed.begin(); it != processed.end(); it++) {
+                if ((*it)->equals(check)) {
+                    it = processed.end();
+                    isUnique = false;
+                }
+            }
+            if (isUnique) {
+                unprocessed.push(check);
+            }
+        }
+        // Send an action potential if necessary.
+        current->changeCue(change);
+        // Remove Neuron as it has just been processed.
+        unprocessed.pop();
+
+    }
 }
 
 void NeuralNetwork::determineState() {

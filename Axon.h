@@ -14,8 +14,7 @@ class Axon
     public:
         /** Default constructor */
         Axon();
-        Axon(int x, int y, int z);
-        Axon(int x, int y, int z, float cue);
+        Axon(int x, int y, int z, Neuron* origin);
 
         void setDirection();
         void growDirection();
@@ -43,6 +42,8 @@ class Axon
         Synapse* tail;
         //Synapse* synapse[MAX_SYNAPSES]; // There can not be any empty synapse elements between non-empty elements.  If this is unavoidable or really slow, find another way to do this and tell me.
         int numSynapses;
+
+        Neuron* origin;
 };
 
 #endif // AXON_H

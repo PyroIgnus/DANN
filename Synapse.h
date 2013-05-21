@@ -12,7 +12,7 @@ class Synapse
     public:
         /** Default constructor */
         Synapse();
-        Synapse(Neuron* target);
+        Synapse(Neuron* target, Neuron* origin);
 
         void trigger(float value);
         Neuron* getTarget();
@@ -20,15 +20,19 @@ class Synapse
         Synapse* getNext();
         void setNext(Synapse* next);
         void depreciate(float value);
+        float getWeight();
 
         /** Default destructor */
         virtual ~Synapse();
+        void deleteAll();
     protected:
     private:
 
         float weight;
         Neuron* target;
         Synapse* next;
+
+        Neuron* origin;
 
 };
 
