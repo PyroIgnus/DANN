@@ -5,6 +5,8 @@
 #include "utils.h"
 #include "global.h"
 
+class Neuron;
+
 class Reservoir
 {
     public:

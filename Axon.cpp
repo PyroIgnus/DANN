@@ -29,11 +29,11 @@ Axon::Axon(int x, int y, int z, Neuron* origin)
 }
 
 void Axon::setDirection() {
-    // Use the axon's position to determine which Neurons to check.  Might need a way to have access to the Reservoir's Neuron array.
+    // Use the axon's position to determine which Neurons to check.
 }
 
 void Axon::growDirection() {
-    // Use the direction to find and snap to a new location.  Watch for boundaries.
+    // Use the direction to find and snap to a new location.  Watch for boundaries and max length.
 }
 
 void Axon::forceLink(Neuron* target) {
@@ -45,6 +45,7 @@ void Axon::createSynapses() {
     // Create Synapses to add to the list and link them to the nearby Neurons.  Might need a way to have access to the Reservoir's Neuron array.  watch for boundaries.
 }
 
+// Might not use this.
 void Axon::retractSynapses() {
     // Check the list for any Synapses that need removing (below threshold).
     Synapse* curr = head;

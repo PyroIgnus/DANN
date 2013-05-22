@@ -14,13 +14,14 @@
 	"utils.h"
 	"global.h"
 
-1368841021 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\reservoir.h
+1369243330 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\reservoir.h
 	"Neuron.h"
 	"utils.h"
 	"global.h"
 
-1369102423 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\neuron.h
+1369243512 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\neuron.h
 	"Axon.h"
+	"Reservoir.h"
 	"utils.h"
 	"global.h"
 	<vector>
@@ -31,7 +32,7 @@
 	"global.h"
 	<vector>
 
-1369104967 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\synapse.h
+1369242196 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\synapse.h
 	"Neuron.h"
 	"global.h"
 	"utils.h"
@@ -44,26 +45,26 @@
 1368718256 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\axon.cpp
 	"Axon.h"
 
-1369105041 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\axon.cpp
+1369242605 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\axon.cpp
 	"Axon.h"
 	<stdio.h>
 
-1369096434 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\utils.h
+1369242079 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\utils.h
 	<stdio.h>
 
-1369100036 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\neuralnetwork.cpp
+1369242265 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\neuralnetwork.cpp
 	"NeuralNetwork.h"
 	<queue>
 	<list>
 
-1369103545 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\neuron.cpp
+1369243295 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\neuron.cpp
 	"Neuron.h"
 	<stdio.h>
 
 1368841021 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\reservoir.cpp
 	"Reservoir.h"
 
-1369105188 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\synapse.cpp
+1369241992 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\synapse.cpp
 	"Synapse.h"
 
 1368908221 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\utils.cpp

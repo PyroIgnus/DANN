@@ -100,7 +100,7 @@ void NeuralNetwork::process() {
 
     }
 
-    // Decrease the lifespan of all Synapses.
+    // Update the lifespan of all Synapses based on their target cues.
     for (int res = 0; res < numReservoirs; res++) {
         for (int i = 0; i < resDimension; i++) {
             for (int j = 0; j < resDimension; j++) {
@@ -109,7 +109,7 @@ void NeuralNetwork::process() {
                     head = current->getAxon()->getSynapseHead();
                     curr = head;
                     for (int i = 0; i < current->getAxon()->getNumSynapses(); i++) {
-                        curr->depreciate(0.1);
+                        curr->depreciate(WEIGHT_CHANGE * curr->getTarget()->getCue());   // Some function of the target cue.
                         curr = curr->getNext();
                     }
                 }

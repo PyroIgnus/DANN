@@ -20,6 +20,7 @@ class Synapse
         Synapse* getNext();
         void setNext(Synapse* next);
         void depreciate(float value);
+        void changeWeight(float value);
         float getWeight();
 
         /** Default destructor */

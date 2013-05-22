@@ -45,7 +45,7 @@ Neuron::Neuron(int x, int y, int z) {
     numConnections = 0;
 }
 
-Neuron::Neuron(int x, int y, int z, float cue) {
+Neuron::Neuron(int x, int y, int z, float cue, Reservoir* res) {
 
     logger (file, "Neuron Created.\n");
     position[0] = x;
@@ -61,6 +61,7 @@ Neuron::Neuron(int x, int y, int z, float cue) {
     recoveryPeriod = RECOVERY_PERIOD;
     recoveryThreshold = RECOVERY_THRESHOLD;
     axon = new Axon(x, y, z, this);
+    this->res = res;
 
     connection.resize(MAX_INPUTS);
     counter.resize(MAX_INPUTS);
@@ -163,6 +164,10 @@ Neuron* Neuron::getConnection(int index) {
 
 int Neuron::getConnSize() {
     return connection.size();
+}
+
+float Neuron::getCue() {
+    return cue;
 }
 
 Neuron::~Neuron()

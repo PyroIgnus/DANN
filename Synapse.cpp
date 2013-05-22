@@ -40,6 +40,11 @@ void Synapse::depreciate(float value) {
     // Decrease weight/lifespan by something related to the value (or something constant).
 }
 
+void Synapse::changeWeight(float value) {
+    // Adds value to the weight.
+    weight += value;
+}
+
 float Synapse::getWeight() {
     return weight;
 }

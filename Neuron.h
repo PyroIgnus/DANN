@@ -2,11 +2,13 @@
 #define NEURON_H
 
 #include "Axon.h"
+#include "Reservoir.h"
 #include "utils.h"
 #include "global.h"
 #include <vector>
 
 class Axon;
+class Reservoir;
 
 class Neuron
 {
@@ -14,7 +16,7 @@ class Neuron
         /** Default constructor */
         Neuron();
         Neuron(int x, int y, int z);
-        Neuron(int x, int y, int z, float cue);
+        Neuron(int x, int y, int z, float cue, Reservoir* res);
 
         void addConnection(Neuron* source);
         void removeConnection(Neuron* source);
@@ -29,6 +31,10 @@ class Neuron
         Axon* getAxon();
         Neuron* getConnection(int index);
         int getConnSize();
+        float getCue();
+        inline Reservoir* getRes() {
+            return res;
+        };
 
         /** Default destructor */
         virtual ~Neuron();
@@ -51,6 +57,7 @@ class Neuron
         int recoveryPeriod;
         int recoveryThreshold;
         Axon* axon;
+        Reservoir* res;
 
         std::vector<Neuron*> connection;
         int numConnections;
