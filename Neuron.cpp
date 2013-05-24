@@ -172,6 +172,6 @@ float Neuron::getCue() {
 
 Neuron::~Neuron()
 {
-    delete axon;
+    //delete axon;
     logger (file, "Neuron Destroyed.\n");
 }

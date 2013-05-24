@@ -168,10 +168,16 @@ NeuralNetwork::~NeuralNetwork()
 {
     logger (file, "Destroying Neural Network.\n");
     for (int i = 0; i < numSensors; i++) {
-        delete sensors[i];
+        delete sensors[i]->getAxon();
+    }
+    for (int i = 0; i < numMotors; i++) {
+        delete motors[i]->getAxon();
     }
     for (int i = 0; i < numReservoirs; i++) {
         delete reservoir[i];
+    }
+    for (int i = 0; i < numSensors; i++) {
+        delete sensors[i];
     }
     for (int i = 0; i < numMotors; i++) {
         delete motors[i];

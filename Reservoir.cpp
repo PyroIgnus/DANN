@@ -40,6 +40,13 @@ Reservoir::~Reservoir()
     for (int i = 0; i < resSize; i++) {
         for (int j = 0; j < resSize; j++) {
             for (int k = 0; k < resSize; k++) {
+                delete neurons[i][j][k]->getAxon();
+            }
+        }
+    }
+    for (int i = 0; i < resSize; i++) {
+        for (int j = 0; j < resSize; j++) {
+            for (int k = 0; k < resSize; k++) {
                 delete neurons[i][j][k];
             }
         }
