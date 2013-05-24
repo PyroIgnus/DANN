@@ -13,6 +13,7 @@ class Synapse
         /** Default constructor */
         Synapse();
         Synapse(Neuron* target, Neuron* origin);
+        Synapse(float weight, Neuron* target, Neuron* origin);
 
         void trigger(float value);
         Neuron* getTarget();

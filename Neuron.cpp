@@ -89,7 +89,7 @@ void Neuron::removeConnection(Neuron* source) {
     for (int i = 0; i < numConnections; i++) {
         if (source == connection[i]) {
             counter[i] -= 1;
-            if (counter[i] == 0) {
+            if (counter[i] <= 0) {
                 connection.erase(it1 + i);
                 counter.erase(it2 + i);
                 connection.push_back(NULL);

@@ -15,6 +15,16 @@ Synapse::Synapse(Neuron* target, Neuron* origin) {
     target->addConnection(origin);
 }
 
+Synapse::Synapse(float weight, Neuron* target, Neuron* origin) {
+    this->target = target;
+    this->weight = weight;
+    next = NULL;
+    this->origin = origin;
+
+    // Add this connection to target.
+    target->addConnection(origin);
+}
+
 void Synapse::trigger(float value) {
     target->acceptSignal(value, origin);
     // Increment weight/lifespan.

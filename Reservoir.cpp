@@ -15,7 +15,15 @@ Reservoir::Reservoir(int resDimension)
     for (int i = 0; i < resSize; i++) {
         for (int j = 0; j < resSize; j++) {
             for (int k = 0; k < resSize; k++) {
-                neurons[i][j][k] = new Neuron(i, j, k);
+                neurons[i][j][k] = new Neuron(i, j, k, 1, this);
+            }
+        }
+    }
+    for (int i = 0; i < resSize; i++) {
+        for (int j = 0; j < resSize; j++) {
+            for (int k = 0; k < resSize; k++) {
+                neurons[i][j][k]->getAxon()->setDirection();
+                neurons[i][j][k]->getAxon()->growDirection();
             }
         }
     }

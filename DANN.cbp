@@ -42,6 +42,8 @@
 		<Unit filename="Reservoir.h" />
 		<Unit filename="Synapse.cpp" />
 		<Unit filename="Synapse.h" />
+		<Unit filename="global.cpp" />
+		<Unit filename="global.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="utils.cpp" />
 		<Unit filename="utils.h" />

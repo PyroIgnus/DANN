@@ -4,12 +4,13 @@
 #include <stdio.h>
 
 #define NUM_RESERVOIRS 1
-#define MAX_RES_SIZE 5
+#define MAX_RES_SIZE 2
 #define NUM_SENSORS 5
 #define NUM_MOTORS 5
 #define MAX_INPUTS 1000
 #define MAX_AXON_LENGTH 10
 #define MAX_SYNAPSES 10000
+#define SEARCH_RADIUS 1
 
 #define THRESHOLD 50
 #define RECOVERY_PERIOD 3

@@ -1,5 +1,6 @@
 #include "Axon.h"
 #include <stdio.h>
+#include <math.h>
 
 Axon::Axon()
 {
@@ -13,13 +14,14 @@ Axon::Axon(int x, int y, int z, Neuron* origin)
     maxSynapses = MAX_SYNAPSES;
     maxAxonLength = MAX_AXON_LENGTH;
 
-    position[0][0] = x;
-    position[0][1] = y;
-    position[0][2] = z;
+    position[0] = x;
+    position[1] = y;
+    position[2] = z;
     direction[0] = 0;
     direction[1] = 0;
     direction[2] = 0;
     numSynapses = 0;
+    length = 0;
     head = NULL;
     tail = NULL;
     this->origin = origin;
@@ -29,11 +31,50 @@ Axon::Axon(int x, int y, int z, Neuron* origin)
 }
 
 void Axon::setDirection() {
+    float dirVec[] = {0, 0 ,0};
+    direction[0] = 0;
+    direction[1] = 0;
+    direction[2] = 0;
     // Use the axon's position to determine which Neurons to check.
+    for (int i = position[0] - SEARCH_RADIUS; i <= position[0] + SEARCH_RADIUS; i++) {
+        if (i >= 0 && i < MAX_RES_SIZE) {
+            for (int j = position[1] - SEARCH_RADIUS; j <= position[1] + SEARCH_RADIUS; j++) {
+                if (j >= 0 && j < MAX_RES_SIZE) {
+                    for (int k = position[2] - SEARCH_RADIUS; k <= position[2] + SEARCH_RADIUS; k++) {
+                        if (k >= 0 && k < MAX_RES_SIZE) {
+                            // Function of distance and cue.
+                            dirVec[0] = position[0] - i;
+                            dirVec[1] = position[1] - j;
+                            dirVec[2] = position[2] - k;
+                            direction[0] += origin->getRes()->getNeuron(i, j, k)->getCue() / (dirVec[0] * dirVec[0]);
+                            direction[1] += origin->getRes()->getNeuron(i, j, k)->getCue() / (dirVec[1] * dirVec[1]);
+                            direction[2] += origin->getRes()->getNeuron(i, j, k)->getCue() / (dirVec[2] * dirVec[2]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    // Normalize the direction vector.
+    float magnitude = sqrt (pow (direction[0], 2) + pow (direction[1], 2) + pow (direction[2], 2));
+    direction[0] = direction[0]/magnitude;
+    direction[1] = direction[1]/magnitude;
+    direction[2] = direction[2]/magnitude;
 }
 
 void Axon::growDirection() {
     // Use the direction to find and snap to a new location.  Watch for boundaries and max length.
+    if (length <= MAX_AXON_LENGTH) {
+        if (position[0] + round (direction[0]) >= 0 && position[0] + round (direction[0]) < MAX_RES_SIZE)
+            position[0] += round (direction[0]);
+        if (position[1] + round (direction[1]) >= 0 && position[1] + round (direction[1]) < MAX_RES_SIZE)
+            position[1] += round (direction[1]);
+        if (position[2] + round (direction[2]) >= 0 && position[2] + round (direction[2]) < MAX_RES_SIZE)
+            position[2] += round (direction[2]);
+        length += 1;
+    }
+    // Create Synapses
+    createSynapses();
 }
 
 void Axon::forceLink(Neuron* target) {
@@ -42,7 +83,22 @@ void Axon::forceLink(Neuron* target) {
 }
 
 void Axon::createSynapses() {
-    // Create Synapses to add to the list and link them to the nearby Neurons.  Might need a way to have access to the Reservoir's Neuron array.  watch for boundaries.
+    // Create Synapses to add to the list and link them to the nearby Neurons.  Watch for boundaries.
+    for (int i = position[0] - SEARCH_RADIUS; i <= position[0] + SEARCH_RADIUS; i++) {
+        if (i >= 0 && i < MAX_RES_SIZE) {
+            for (int j = position[1] - SEARCH_RADIUS; j <= position[1] + SEARCH_RADIUS; j++) {
+                if (j >= 0 && j < MAX_RES_SIZE) {
+                    for (int k = position[2] - SEARCH_RADIUS; k <= position[2] + SEARCH_RADIUS; k++) {
+                        if (k >= 0 && k < MAX_RES_SIZE) {
+                            if (origin->getRes()->getNeuron(i, j, k)->getCue() > 0) {
+                                insertSynapse(new Synapse(origin->getRes()->getNeuron(i, j, k)->getCue(), origin->getRes()->getNeuron(i, j, k), origin));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 // Might not use this.

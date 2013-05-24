@@ -16,7 +16,7 @@ class NeuralNetwork
 
         /**
          * @brief Constructor that initializes its neurons based on the file read.
-         * @arg filename Accepts a string for the filen name of the network matrix.
+         * @arg filename Accepts a string for the file name of the network matrix.
          */
         NeuralNetwork(char* filename);
 

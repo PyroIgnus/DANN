@@ -36,12 +36,13 @@ class Axon
         int maxAxonLength;
         int maxSynapses;
 
-        int position[MAX_AXON_LENGTH][3];
+        int position[3];
         float direction[3];
         Synapse* head;
         Synapse* tail;
         //Synapse* synapse[MAX_SYNAPSES]; // There can not be any empty synapse elements between non-empty elements.  If this is unavoidable or really slow, find another way to do this and tell me.
         int numSynapses;
+        int length;
 
         Neuron* origin;
 };
