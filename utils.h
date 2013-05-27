@@ -4,22 +4,23 @@
 #include <stdio.h>
 
 #define NUM_RESERVOIRS 1
-#define MAX_RES_SIZE 2
-#define NUM_SENSORS 5
-#define NUM_MOTORS 5
+#define MAX_RES_SIZE 3
+#define NUM_SENSORS 2
+#define NUM_MOTORS 1
 #define MAX_INPUTS 1000
-#define MAX_AXON_LENGTH 10
+#define MAX_AXON_LENGTH 3
 #define MAX_SYNAPSES 10000
 #define SEARCH_RADIUS 1
 
+#define ACTION_POTENTIAL 25
 #define THRESHOLD 50
 #define RECOVERY_PERIOD 3
-#define RECOVERY_THRESHOLD 150
-#define INITIAL_SYNAPSE_WEIGHT 0.5
+#define RECOVERY_THRESHOLD 40
+#define INITIAL_SYNAPSE_WEIGHT 1
 #define CUE_CHANGE 0.25
-#define WEIGHT_CHANGE 0.1
+#define WEIGHT_CHANGE 0.5
 
-#define LOGGING 1
+#define LOGGING 0
 
 void logger(FILE *file, char *message);
 

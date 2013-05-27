@@ -20,11 +20,12 @@ class Neuron
 
         void addConnection(Neuron* source);
         void removeConnection(Neuron* source);
-        void acceptSignal(float value, Neuron* source);
+        virtual void acceptSignal(float value, Neuron* source);
         float process();
-        void activatePotential(float value);
+        bool activatePotential(float value);
         void changeCue(float value);
         bool equals (Neuron* other);
+        void resetTrigger();
         int getX();
         int getY();
         int getZ();
@@ -32,9 +33,11 @@ class Neuron
         Neuron* getConnection(int index);
         int getConnSize();
         float getCue();
+        bool isTriggered();
         inline Reservoir* getRes() {
             return res;
         };
+        void printPosition();
 
         /** Default destructor */
         virtual ~Neuron();
@@ -50,6 +53,7 @@ class Neuron
          */
         float cue;
         bool alive;
+        bool triggered; // Used for checking Motor Neurons.
         int position[3];
         float dendrites[MAX_INPUTS];
         int numDendritesActive;

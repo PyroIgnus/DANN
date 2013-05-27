@@ -21,16 +21,18 @@ int main(int argc, char *argv[]) {
     time ( &rawtime );
     timeinfo = localtime ( &rawtime );
     strftime (buff, 80, "DNN-%Y-%m-%d-%H-%M-%S.log", timeinfo);
-    file = fopen (buff, "w");
+    if (LOGGING)
+        file = fopen (buff, "w");
 
     printf ("Starting Neural Network:\n");
     NeuralNetwork* net = new NeuralNetwork();
 
-    //net->train();
+    net->trainAND();
 
     printf ("Ending Neural Network.\n");
     delete net;
     printf ("Neural Network successfully ended.\n");
-    fclose (file);
+    if (LOGGING)
+        fclose (file);
     return 0;
 }

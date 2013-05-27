@@ -72,9 +72,10 @@ void Axon::growDirection() {
         if (position[2] + round (direction[2]) >= 0 && position[2] + round (direction[2]) < MAX_RES_SIZE)
             position[2] += round (direction[2]);
         length += 1;
+        // Create Synapses
+        createSynapses();
+        //printPosition();
     }
-    // Create Synapses
-    createSynapses();
 }
 
 void Axon::forceLink(Neuron* target) {
@@ -91,7 +92,7 @@ void Axon::createSynapses() {
                     for (int k = position[2] - SEARCH_RADIUS; k <= position[2] + SEARCH_RADIUS; k++) {
                         if (k >= 0 && k < MAX_RES_SIZE) {
                             if (origin->getRes()->getNeuron(i, j, k)->getCue() > 0) {
-                                insertSynapse(new Synapse(origin->getRes()->getNeuron(i, j, k)->getCue(), origin->getRes()->getNeuron(i, j, k), origin));
+                                insertSynapse(new Synapse(origin->getRes()->getNeuron(i, j, k)->getCue()/26, origin->getRes()->getNeuron(i, j, k), origin));
                             }
                         }
                     }
@@ -143,6 +144,7 @@ void Axon::removeSynapse(Synapse* target) {
             prev->setNext(curr->getNext());
             delete curr;
             numSynapses -= 1;
+            return;
         }
         prev = curr;
         curr = curr->getNext();
@@ -165,20 +167,22 @@ void Axon::insertSynapse(Synapse* target) {
 }
 
 void Axon::passSignal(float value) {
+    // Reset axon if it no longer has any synapses.
+    if (head == NULL) {
+        position[0] = origin->getX();
+        position[1] = origin->getY();
+        position[2] = origin->getZ();
+        length = 0;
+    }
     // Iterates through the array of synapses and calls their trigger().
     Synapse* curr = head;
     while (curr) {
         curr->trigger(value);
+        curr = curr->getNext();
     }
-//    int temp = numSynapses;
-//    for (int i = 0; i < temp; i++) {
-//        if (synapse[i] == NULL) {
-//            temp += 1;
-//        }
-//        else {
-//            synapse[i]->trigger(value);
-//        }
-//    }
+    // Grows the axon.
+    setDirection();
+    growDirection();
 }
 
 Synapse* Axon::getSynapseHead() {
@@ -187,6 +191,10 @@ Synapse* Axon::getSynapseHead() {
 
 int Axon::getNumSynapses() {
     return numSynapses;
+}
+
+void Axon::printPosition() {
+    printf ("%d %d %d\n", position[0], position[1], position[2]);
 }
 
 Axon::~Axon()

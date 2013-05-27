@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1369337241 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\main.cpp
+1369605949 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\main.cpp
 	<stdio.h>
 	<string.h>
 	<time.h>
@@ -8,7 +8,7 @@
 	"utils.h"
 	"global.h"
 
-1369336326 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\neuralnetwork.h
+1369445321 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\neuralnetwork.h
 	"Reservoir.h"
 	"Neuron.h"
 	"utils.h"
@@ -19,14 +19,14 @@
 	"utils.h"
 	"global.h"
 
-1369243512 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\neuron.h
+1369436915 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\neuron.h
 	"Axon.h"
 	"Reservoir.h"
 	"utils.h"
 	"global.h"
 	<vector>
 
-1369335231 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\axon.h
+1369421948 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\axon.h
 	"Synapse.h"
 	"utils.h"
 	"global.h"
@@ -45,27 +45,29 @@
 1368718256 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\axon.cpp
 	"Axon.h"
 
-1369336601 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\axon.cpp
+1369607785 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\axon.cpp
 	"Axon.h"
 	<stdio.h>
 	<math.h>
 
-1369337313 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\utils.h
+1369636054 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\utils.h
 	<stdio.h>
 
-1369336619 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\neuralnetwork.cpp
+1369636700 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\neuralnetwork.cpp
 	"NeuralNetwork.h"
 	<queue>
 	<list>
+	<stdlib.h>
+	<unistd.h>
 
-1369365841 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\neuron.cpp
+1369539761 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\neuron.cpp
 	"Neuron.h"
 	<stdio.h>
 
-1369365834 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\reservoir.cpp
+1369427888 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\reservoir.cpp
 	"Reservoir.h"
 
-1369335814 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\synapse.cpp
+1369607254 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\synapse.cpp
 	"Synapse.h"
 
 1368908221 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\utils.cpp

@@ -26,6 +26,7 @@ class Axon
         void passSignal(float value);
         Synapse* getSynapseHead ();
         int getNumSynapses();
+        void printPosition();
 
 
         /** Default destructor */

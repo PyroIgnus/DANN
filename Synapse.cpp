@@ -27,7 +27,8 @@ Synapse::Synapse(float weight, Neuron* target, Neuron* origin) {
 
 void Synapse::trigger(float value) {
     target->acceptSignal(value, origin);
-    // Increment weight/lifespan.
+    // Increment weight/lifespan.  Use only when reinforcement of action is required.  Won't need this until the system is autonomous.
+    //changeWeight(0.01);
 }
 
 Neuron* Synapse::getTarget() {
@@ -46,6 +47,7 @@ void Synapse::setNext(Synapse* next) {
     this->next = next;
 }
 
+// Might not use.
 void Synapse::depreciate(float value) {
     // Decrease weight/lifespan by something related to the value (or something constant).
 }
@@ -53,6 +55,10 @@ void Synapse::depreciate(float value) {
 void Synapse::changeWeight(float value) {
     // Adds value to the weight.
     weight += value;
+//    char buff[50];
+//    sprintf(buff, "%lf ", weight);
+//    logger(file, buff);
+//    printf ("%lf ", weight);
 }
 
 float Synapse::getWeight() {

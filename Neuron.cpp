@@ -101,8 +101,10 @@ void Neuron::removeConnection(Neuron* source) {
 
 void Neuron::acceptSignal(float value, Neuron* source) {
     // Append this value to the array of values to be processed.
-    dendrites[numDendritesActive] = value;
-    numDendritesActive += 1;
+    if (numDendritesActive < MAX_INPUTS) {
+        dendrites[numDendritesActive] = value;
+        numDendritesActive += 1;
+    }
 }
 
 float Neuron::process() {
@@ -120,8 +122,15 @@ float Neuron::process() {
     return result;
 }
 
-void Neuron::activatePotential(float value) {
+bool Neuron::activatePotential(float value) {
     // If the value exceeds the threshold, then pass value into axon (passSignal()).
+    if (value >= threshold) {
+        axon->passSignal(ACTION_POTENTIAL); // All-or-none response.
+        triggered = true;
+        //logger(file, "Action potential fired.");
+        return true;
+    }
+    return false;
 }
 
 void Neuron::changeCue(float value) {
@@ -129,17 +138,14 @@ void Neuron::changeCue(float value) {
 }
 
 bool Neuron::equals(Neuron* other) {
-//    if (position[0] == other->getX()) {
-//        if (position[1] == other->getY()) {
-//            if (position[2] == other->getZ()) {
-//                return true;
-//            }
-//        }
-//    }
     if (other == this){
         return true;
     }
     return false;
+}
+
+void Neuron::resetTrigger() {
+    triggered = false;
 }
 
 int Neuron::getX() {
@@ -163,11 +169,19 @@ Neuron* Neuron::getConnection(int index) {
 }
 
 int Neuron::getConnSize() {
-    return connection.size();
+    return numConnections;
 }
 
 float Neuron::getCue() {
     return cue;
+}
+
+bool Neuron::isTriggered() {
+    return triggered;
+}
+
+void Neuron::printPosition() {
+    printf ("%d %d %d\n", position[0], position[1], position[2]);
 }
 
 Neuron::~Neuron()
