@@ -23,8 +23,9 @@ class NeuralNetwork
         void linkSensor(Neuron* sensor, Neuron* target);
         void linkMotor(Neuron* target, Neuron* motor);
         void trainAND();
+        void trainOR();
         void updateSensors(std::vector<float> values);
-        void process();
+        void process(bool train);
         void updateCues(Neuron* motor, bool reinforce);
         void determineState();  // This is to make the net learn "autonomously".
         void outputMotors();

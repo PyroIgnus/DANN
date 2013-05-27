@@ -30,6 +30,30 @@ Axon::Axon(int x, int y, int z, Neuron* origin)
 //    }
 }
 
+Axon::Axon(int x, int y, int z, Neuron* origin, Reservoir* res)
+{
+    logger (file, "Axon created.\n");
+
+    maxSynapses = MAX_SYNAPSES;
+    maxAxonLength = MAX_AXON_LENGTH;
+
+    position[0] = x;
+    position[1] = y;
+    position[2] = z;
+    direction[0] = 0;
+    direction[1] = 0;
+    direction[2] = 0;
+    numSynapses = 0;
+    length = 0;
+    head = NULL;
+    tail = NULL;
+    this->origin = origin;
+    this->res = res;
+//    for (int i = 0; i < maxSynapses; i++) {
+//        synapse[i] = NULL;
+//    }
+}
+
 void Axon::setDirection() {
     float dirVec[] = {0, 0 ,0};
     direction[0] = 0;
@@ -46,9 +70,16 @@ void Axon::setDirection() {
                             dirVec[0] = position[0] - i;
                             dirVec[1] = position[1] - j;
                             dirVec[2] = position[2] - k;
-                            direction[0] += origin->getRes()->getNeuron(i, j, k)->getCue() / (dirVec[0] * dirVec[0]);
-                            direction[1] += origin->getRes()->getNeuron(i, j, k)->getCue() / (dirVec[1] * dirVec[1]);
-                            direction[2] += origin->getRes()->getNeuron(i, j, k)->getCue() / (dirVec[2] * dirVec[2]);
+                            if (origin->getRes() != NULL) {
+                                direction[0] += origin->getRes()->getNeuron(i, j, k)->getCue() / (dirVec[0] * dirVec[0]);
+                                direction[1] += origin->getRes()->getNeuron(i, j, k)->getCue() / (dirVec[1] * dirVec[1]);
+                                direction[2] += origin->getRes()->getNeuron(i, j, k)->getCue() / (dirVec[2] * dirVec[2]);
+                            }
+                            else {
+                                direction[0] += res->getNeuron(i, j, k)->getCue() / (dirVec[0] * dirVec[0]);
+                                direction[1] += res->getNeuron(i, j, k)->getCue() / (dirVec[1] * dirVec[1]);
+                                direction[2] += res->getNeuron(i, j, k)->getCue() / (dirVec[2] * dirVec[2]);
+                            }
                         }
                     }
                 }
@@ -64,7 +95,7 @@ void Axon::setDirection() {
 
 void Axon::growDirection() {
     // Use the direction to find and snap to a new location.  Watch for boundaries and max length.
-    if (length <= MAX_AXON_LENGTH) {
+    if (length < MAX_AXON_LENGTH) {
         if (position[0] + round (direction[0]) >= 0 && position[0] + round (direction[0]) < MAX_RES_SIZE)
             position[0] += round (direction[0]);
         if (position[1] + round (direction[1]) >= 0 && position[1] + round (direction[1]) < MAX_RES_SIZE)
@@ -85,14 +116,21 @@ void Axon::forceLink(Neuron* target) {
 
 void Axon::createSynapses() {
     // Create Synapses to add to the list and link them to the nearby Neurons.  Watch for boundaries.
-    for (int i = position[0] - SEARCH_RADIUS; i <= position[0] + SEARCH_RADIUS; i++) {
+    for (int i = position[0] - SEARCH_RADIUS; i <= (position[0] + SEARCH_RADIUS); i++) {
         if (i >= 0 && i < MAX_RES_SIZE) {
             for (int j = position[1] - SEARCH_RADIUS; j <= position[1] + SEARCH_RADIUS; j++) {
                 if (j >= 0 && j < MAX_RES_SIZE) {
                     for (int k = position[2] - SEARCH_RADIUS; k <= position[2] + SEARCH_RADIUS; k++) {
                         if (k >= 0 && k < MAX_RES_SIZE) {
-                            if (origin->getRes()->getNeuron(i, j, k)->getCue() > 0) {
-                                insertSynapse(new Synapse(origin->getRes()->getNeuron(i, j, k)->getCue()/26, origin->getRes()->getNeuron(i, j, k), origin));
+                            if (origin->getRes() != NULL) {
+                                if (origin->getRes()->getNeuron(i, j, k)->getCue() > 0) {
+                                    insertSynapse(new Synapse(origin->getRes()->getNeuron(i, j, k)->getCue()/26, origin->getRes()->getNeuron(i, j, k), origin));
+                                }
+                            }
+                            else {
+                                if (res->getNeuron(i, j, k)->getCue() > 0) {
+                                    insertSynapse(new Synapse(res->getNeuron(i, j, k)->getCue()/26, res->getNeuron(i, j, k), origin));
+                                }
                             }
                         }
                     }
@@ -181,8 +219,8 @@ void Axon::passSignal(float value) {
         curr = curr->getNext();
     }
     // Grows the axon.
-    setDirection();
-    growDirection();
+//    setDirection();
+//    growDirection();
 }
 
 Synapse* Axon::getSynapseHead() {

@@ -2,12 +2,14 @@
 #define AXON_H
 
 #include "Synapse.h"
+#include "Reservoir.h"
 #include "utils.h"
 #include "global.h"
 #include <vector>
 
 class Synapse;
 class Neuron;
+class Reservoir;
 
 class Axon
 {
@@ -15,6 +17,7 @@ class Axon
         /** Default constructor */
         Axon();
         Axon(int x, int y, int z, Neuron* origin);
+        Axon(int x, int y, int z, Neuron* origin, Reservoir* res);
 
         void setDirection();
         void growDirection();
@@ -46,6 +49,7 @@ class Axon
         int length;
 
         Neuron* origin;
+        Reservoir* res;
 };
 
 #endif // AXON_H

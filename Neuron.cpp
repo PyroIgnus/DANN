@@ -17,6 +17,7 @@ Neuron::Neuron()
     recoveryPeriod = RECOVERY_PERIOD;
     recoveryThreshold = RECOVERY_THRESHOLD;
     axon = new Axon(-10, -10, -10, this);
+    res = NULL;
 
     connection.resize(MAX_INPUTS);
     counter.resize(MAX_INPUTS);
@@ -39,6 +40,7 @@ Neuron::Neuron(int x, int y, int z) {
     recoveryPeriod = RECOVERY_PERIOD;
     recoveryThreshold = RECOVERY_THRESHOLD;
     axon = new Axon(x, y, z, this);
+    res = NULL;
 
     connection.resize(MAX_INPUTS);
     counter.resize(MAX_INPUTS);
@@ -60,7 +62,7 @@ Neuron::Neuron(int x, int y, int z, float cue, Reservoir* res) {
     threshold = THRESHOLD;
     recoveryPeriod = RECOVERY_PERIOD;
     recoveryThreshold = RECOVERY_THRESHOLD;
-    axon = new Axon(x, y, z, this);
+    axon = new Axon(x, y, z, this, res);
     this->res = res;
 
     connection.resize(MAX_INPUTS);

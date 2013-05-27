@@ -1,4 +1,5 @@
 #include "Synapse.h"
+#include <cmath>
 
 Synapse::Synapse()
 {
@@ -54,7 +55,9 @@ void Synapse::depreciate(float value) {
 
 void Synapse::changeWeight(float value) {
     // Adds value to the weight.
-    weight += value;
+    if (std::abs(weight + value) < MAX_WEIGHT) {
+        weight += value;
+    }
 //    char buff[50];
 //    sprintf(buff, "%lf ", weight);
 //    logger(file, buff);
