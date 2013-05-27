@@ -221,9 +221,7 @@ void NeuralNetwork::updateCues(Neuron* motor, bool reinforce) {
         change = change * (-1);
     }
 
-    for (int i = 0; i < numMotors; i++) {
-        unprocessed.push_back(motor);
-    }
+    unprocessed.push_back(motor);
     for (int i = 0; i < numMotors; i++) {
         processed.push_back(sensors[i]);
     }
