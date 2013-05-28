@@ -1,5 +1,6 @@
 #include "Neuron.h"
 #include <stdio.h>
+#include <cmath>
 
 Neuron::Neuron()
 {
@@ -99,6 +100,7 @@ void Neuron::removeConnection(Neuron* source) {
                 counter.erase(it2 + i);
                 connection.push_back(NULL);
                 counter.push_back(0);
+                numConnections -= 1;
             }
         }
     }
@@ -139,7 +141,9 @@ bool Neuron::activatePotential(float value) {
 }
 
 void Neuron::changeCue(float value) {
-    cue += value;
+    if (std::abs(cue + value) < MAX_CUE) {
+        cue += value;
+    }
 }
 
 bool Neuron::equals(Neuron* other) {

@@ -20,14 +20,15 @@ NeuralNetwork::NeuralNetwork()
     sensitivityPeriod = false;
 
     for (int i = 0; i < numSensors; i++) {
-        sensors[i] = new Neuron(-10, -10, -10);
+        sensors[i] = new Neuron(-10 - i - i, -10 - i - i, -10 - i - i);
     }
     for (int i = 0; i < numReservoirs; i++) {
         reservoir[i] = new Reservoir(resDimension);
     }
     for (int i = 0; i < numMotors; i++) {
-        motors[i] = new Neuron(resDimension + 10, resDimension + 10, resDimension + 10);
+        motors[i] = new Neuron(resDimension + 10 + i + i, resDimension + 10 + i + i, resDimension + 10 + i + i);
     }
+    // Force link sensors and motors to reservoirs.  Unique to the network.
     for (int i = 0; i < numSensors; i++) {
         linkSensor(sensors[i], reservoir[0]->getNeuron(i, 0, 0));
     }
@@ -66,7 +67,7 @@ void NeuralNetwork::trainAND() {
 
 //    fscanf (stdin, "%d", &input);
     while (true) {
-        usleep(999999);
+//        usleep(999999);
 
 //        if (input == 1) {
             // Test all combinations of 0 and 1 to see if the correct output is made.
@@ -207,7 +208,7 @@ void NeuralNetwork::process() {
     Neuron* check;
     Synapse* head;
     Synapse* curr;
-    bool isUnique;
+    bool isUnique = true;
 
     for (int i = 0; i < numSensors; i++) {
         unprocessed.push_back(sensors[i]);
@@ -219,25 +220,28 @@ void NeuralNetwork::process() {
         current = unprocessed.front();
         head = current->getAxon()->getSynapseHead();
         curr = head;
-        current->printPosition();
-        printf ("%d\n", current->getAxon()->getNumSynapses());
+//        current->printPosition();
+//        printf ("%d\n", current->getAxon()->getNumSynapses());
         // Send an action potential if necessary.
         if (current->activatePotential(current->process())) {
             // Add new Neurons to the queue if necessary
-            isUnique = true;
             for (int i = 0; i < current->getAxon()->getNumSynapses(); i++) {
+                isUnique = true;
                 check = curr->getTarget();
+                curr->trigger(ACTION_POTENTIAL);
                 // Check for duplicates before pushing new Neurons into the queue.
-                for (std::list<Neuron*>::iterator it = processed.begin(); it != processed.end(); it++) {
+                for (std::list<Neuron*>::iterator it = processed.begin(); it != processed.end(); ++it) {
                     if ((*it)->equals(check)) {
                         isUnique = false;
                         break;
                     }
                 }
-                for (std::list<Neuron*>::iterator it = unprocessed.begin(); it != unprocessed.end(); it++) {
-                    if ((*it)->equals(check)) {
-                        isUnique = false;
-                        break;
+                if (isUnique) {
+                    for (std::list<Neuron*>::iterator it = unprocessed.begin(); it != unprocessed.end(); ++it) {
+                        if ((*it)->equals(check)) {
+                            isUnique = false;
+                            break;
+                        }
                     }
                 }
                 if (isUnique) {
@@ -278,10 +282,8 @@ void NeuralNetwork::updateCues(Neuron* motor, bool reinforce) {
         // Process the next Neuron.
         current = unprocessed.front();
         // Add new Neurons to the queue if necessary
-        isUnique = true;
-//        current->printPosition();
-//        printf ("%d\n", current->getConnSize());
         for (int i = 0; i < current->getConnSize(); i++) {
+            isUnique = true;
             check = current->getConnection(i);
             // Check for duplicates before pushing new Neurons into the queue.
             for (std::list<Neuron*>::iterator it = processed.begin(); it != processed.end(); it++) {
@@ -301,7 +303,7 @@ void NeuralNetwork::updateCues(Neuron* motor, bool reinforce) {
             }
         }
         // Update cues if necessary.
-        if (counter >= numMotors && (current->isTriggered() == state)) {
+        if (counter >= numMotors) {
             current->changeCue(change);
         }
         counter += 1;
@@ -320,7 +322,7 @@ void NeuralNetwork::updateCues(Neuron* motor, bool reinforce) {
                 for (int k = 0; k < resDimension; k++) {
                     current = reservoir[res]->getNeuron(i, j, k);
                     current->resetTrigger();
-                    current->resetDendrites();
+//                    current->resetDendrites();
                     // Grow axon if necessary.
                     current->getAxon()->setDirection();
                     current->getAxon()->growDirection();

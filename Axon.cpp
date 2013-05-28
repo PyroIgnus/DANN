@@ -172,16 +172,12 @@ void Axon::removeSynapse(Synapse* target) {
     while (curr) {
         if (curr == target) {
             if (curr == tail) {
-                if (curr->getNext() == NULL) {
-                    tail = prev;
-                }
-                else {
-                    tail = curr->getNext();
-                }
+                tail = prev;
             }
             prev->setNext(curr->getNext());
             delete curr;
             numSynapses -= 1;
+            printf ("%d ", numSynapses);
             return;
         }
         prev = curr;
@@ -213,11 +209,11 @@ void Axon::passSignal(float value) {
         length = 0;
     }
     // Iterates through the array of synapses and calls their trigger().
-    Synapse* curr = head;
-    while (curr) {
-        curr->trigger(value);
-        curr = curr->getNext();
-    }
+//    Synapse* curr = head;
+//    while (curr) {
+//        curr->trigger(value);
+//        curr = curr->getNext();
+//    }
     // Grows the axon.
 //    setDirection();
 //    growDirection();
