@@ -25,7 +25,7 @@ class NeuralNetwork
         void trainAND();
         void trainOR();
         void updateSensors(std::vector<float> values);
-        void process(bool train);
+        void process();
         void updateCues(Neuron* motor, bool reinforce);
         void determineState();  // This is to make the net learn "autonomously".
         void outputMotors();

@@ -66,7 +66,7 @@ void NeuralNetwork::trainAND() {
 
 //    fscanf (stdin, "%d", &input);
     while (true) {
-        //usleep(999999);
+        usleep(999999);
 
 //        if (input == 1) {
             // Test all combinations of 0 and 1 to see if the correct output is made.
@@ -75,7 +75,7 @@ void NeuralNetwork::trainAND() {
                 for (int j = 0; j < 2; j++) {
                     values[1] = j * 100;
                     updateSensors(values);
-                    process(false);
+                    process();
                     if (motors[0]->isTriggered() == (i && j)) {
                         correct += 1;
                         motors[0]->resetTrigger();
@@ -93,7 +93,7 @@ void NeuralNetwork::trainAND() {
             values[0] = (rand() % 2) * 100;
             values[1] = (rand() % 2) * 100;
             updateSensors(values);
-            process(true);
+            process();
             // Use updateCues() to update cues.
             if (motors[0]->isTriggered() != (values[0] && values[1])) {
                 updateCues(motors[0], motors[0]->isTriggered());
@@ -144,7 +144,7 @@ void NeuralNetwork::trainOR() {
                 for (int j = 0; j < 2; j++) {
                     values[1] = j * 100;
                     updateSensors(values);
-                    process(false);
+                    process();
                     if (motors[0]->isTriggered() == (i || j)) {
                         correct += 1;
                         motors[0]->resetTrigger();
@@ -162,7 +162,7 @@ void NeuralNetwork::trainOR() {
             values[0] = (rand() % 2) * 100;
             values[1] = (rand() % 2) * 100;
             updateSensors(values);
-            process(true);
+            process();
             // Use updateCues() to update cues.
             if (motors[0]->isTriggered() != (values[0] || values[1])) {
                 updateCues(motors[0], motors[0]->isTriggered());
@@ -199,7 +199,7 @@ void NeuralNetwork::updateSensors(std::vector<float> values) {
     }
 }
 
-void NeuralNetwork::process(bool train) {
+void NeuralNetwork::process() {
     // Commence a breadth first signal pass starting from the sensor Neurons.
     std::list<Neuron*> unprocessed;
     std::list<Neuron*> processed;
@@ -219,6 +219,8 @@ void NeuralNetwork::process(bool train) {
         current = unprocessed.front();
         head = current->getAxon()->getSynapseHead();
         curr = head;
+        current->printPosition();
+        printf ("%d\n", current->getAxon()->getNumSynapses());
         // Send an action potential if necessary.
         if (current->activatePotential(current->process())) {
             // Add new Neurons to the queue if necessary
@@ -249,36 +251,6 @@ void NeuralNetwork::process(bool train) {
         unprocessed.pop_front();
 
     }
-
-    // Update the lifespan of all Synapses based on their target cues.
-    if (train) {
-        for (int res = 0; res < numReservoirs; res++) {
-            for (int i = 0; i < resDimension; i++) {
-                for (int j = 0; j < resDimension; j++) {
-                    for (int k = 0; k < resDimension; k++) {
-                        current = reservoir[res]->getNeuron(i, j, k);
-                        current->resetTrigger();
-                        // Grow axon if necessary.
-                        current->getAxon()->setDirection();
-                        current->getAxon()->growDirection();
-                        head = current->getAxon()->getSynapseHead();
-                        curr = head;
-                        for (int i = 0; i < current->getAxon()->getNumSynapses(); i++) {
-                            curr->changeWeight(WEIGHT_CHANGE * curr->getTarget()->getCue());   // Some function of the target cue.
-                            if (curr->getWeight() <= 0) {
-                                Synapse* temp = curr->getNext();
-                                current->getAxon()->removeSynapse(curr);
-                                curr = temp;
-                            }
-                            else {
-                                curr = curr->getNext();
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
 }
 
 void NeuralNetwork::updateCues(Neuron* motor, bool reinforce) {
@@ -307,8 +279,8 @@ void NeuralNetwork::updateCues(Neuron* motor, bool reinforce) {
         current = unprocessed.front();
         // Add new Neurons to the queue if necessary
         isUnique = true;
-        current->printPosition();
-        printf ("%d\n", current->getAxon()->getNumSynapses());
+//        current->printPosition();
+//        printf ("%d\n", current->getConnSize());
         for (int i = 0; i < current->getConnSize(); i++) {
             check = current->getConnection(i);
             // Check for duplicates before pushing new Neurons into the queue.
@@ -324,7 +296,7 @@ void NeuralNetwork::updateCues(Neuron* motor, bool reinforce) {
                     break;
                 }
             }
-            if (isUnique) {
+            if (isUnique && (check->isTriggered() == state)) {
                 unprocessed.push_back(check);
             }
         }
@@ -337,6 +309,37 @@ void NeuralNetwork::updateCues(Neuron* motor, bool reinforce) {
         // Remove Neuron as it has just been processed.
         unprocessed.pop_front();
 
+    }
+
+    Synapse* head;
+    Synapse* curr;
+    // Update weights based on the targets' cue values and reset triggers.
+    for (int res = 0; res < numReservoirs; res++) {
+        for (int i = 0; i < resDimension; i++) {
+            for (int j = 0; j < resDimension; j++) {
+                for (int k = 0; k < resDimension; k++) {
+                    current = reservoir[res]->getNeuron(i, j, k);
+                    current->resetTrigger();
+                    current->resetDendrites();
+                    // Grow axon if necessary.
+                    current->getAxon()->setDirection();
+                    current->getAxon()->growDirection();
+                    head = current->getAxon()->getSynapseHead();
+                    curr = head;
+                    for (int i = 0; i < current->getAxon()->getNumSynapses(); i++) {
+                        curr->changeWeight(WEIGHT_CHANGE * curr->getTarget()->getCue());   // Some function of the target cue.
+                        if (curr->getWeight() <= 0) {
+                            Synapse* temp = curr->getNext();
+                            current->getAxon()->removeSynapse(curr);
+                            curr = temp;
+                        }
+                        else {
+                            curr = curr->getNext();
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -354,6 +357,7 @@ void NeuralNetwork::outputMotors() {
         else {
             printf ("Motor %d is off.\n", i);
         }
+        motors[i]->resetDendrites();
     }
 }
 

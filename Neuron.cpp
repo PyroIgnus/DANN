@@ -8,6 +8,7 @@ Neuron::Neuron()
     position[1] = -10;
     position[2] = -10;
     alive = true;
+    triggered = false;
     cue = 0;
     for (int i = 0; i < MAX_INPUTS; i++) {
         dendrites[i] = 0;
@@ -31,6 +32,7 @@ Neuron::Neuron(int x, int y, int z) {
     position[1] = y;
     position[2] = z;
     alive = true;
+    triggered = false;
     cue = (x + y + z) % 2;  // "Random" cue value for unspecified cues.
     for (int i = 0; i < MAX_INPUTS; i++) {
         dendrites[i] = 0;
@@ -54,6 +56,7 @@ Neuron::Neuron(int x, int y, int z, float cue, Reservoir* res) {
     position[1] = y;
     position[2] = z;
     alive = true;
+    triggered = false;
     this->cue = cue;
     for (int i = 0; i < MAX_INPUTS; i++) {
         dendrites[i] = 0;
@@ -148,6 +151,10 @@ bool Neuron::equals(Neuron* other) {
 
 void Neuron::resetTrigger() {
     triggered = false;
+}
+
+void Neuron::resetDendrites() {
+    numDendritesActive = 0;
 }
 
 int Neuron::getX() {

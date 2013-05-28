@@ -26,6 +26,7 @@ class Neuron
         void changeCue(float value);
         bool equals (Neuron* other);
         void resetTrigger();
+        void resetDendrites();
         int getX();
         int getY();
         int getZ();
