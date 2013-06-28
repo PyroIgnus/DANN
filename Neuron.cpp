@@ -34,7 +34,7 @@ Neuron::Neuron(int x, int y, int z) {
     position[2] = z;
     alive = true;
     triggered = false;
-    cue = (x + y + z) % 2;  // "Random" cue value for unspecified cues.
+    cue = 0;    //(x + y + z) % 2;  // "Random" cue value for unspecified cues.
     for (int i = 0; i < MAX_INPUTS; i++) {
         dendrites[i] = 0;
     }
@@ -144,6 +144,10 @@ void Neuron::changeCue(float value) {
     if (std::abs(cue + value) < MAX_CUE) {
         cue += value;
     }
+}
+
+void Neuron::setCue(float value) {
+    cue = value;
 }
 
 bool Neuron::equals(Neuron* other) {

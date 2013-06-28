@@ -27,6 +27,7 @@ int main(int argc, char *argv[]) {
     printf ("Starting Neural Network:\n");
     NeuralNetwork* net = new NeuralNetwork();
 
+    net->trainOR();
     net->trainAND();
 
     printf ("Ending Neural Network.\n");

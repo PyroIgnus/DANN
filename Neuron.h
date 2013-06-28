@@ -24,6 +24,7 @@ class Neuron
         float process();
         bool activatePotential(float value);
         void changeCue(float value);
+        void setCue(float value);
         bool equals (Neuron* other);
         void resetTrigger();
         void resetDendrites();

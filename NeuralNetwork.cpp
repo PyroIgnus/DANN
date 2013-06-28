@@ -30,7 +30,7 @@ NeuralNetwork::NeuralNetwork()
     }
     // Force link sensors and motors to reservoirs.  Unique to the network.
     for (int i = 0; i < numSensors; i++) {
-        linkSensor(sensors[i], reservoir[0]->getNeuron(i, 0, 0));
+        linkSensor(sensors[i], reservoir[0]->getNeuron(i + 1, 0, 0));
     }
     for (int i = 0; i < numMotors; i++) {
         linkMotor(reservoir[0]->getNeuron(resDimension - 1, resDimension - 1, i), motors[i]);
@@ -53,6 +53,7 @@ void NeuralNetwork::linkSensor(Neuron* sensor, Neuron* target) {
 void NeuralNetwork::linkMotor(Neuron* target, Neuron* motor) {
     // Link the target Neuron to motor Neuron by means of axon and synapses.
     target->getAxon()->forceLink(motor);
+    target->setCue(1.0);
 }
 
 void NeuralNetwork::trainAND() {
@@ -220,15 +221,15 @@ void NeuralNetwork::process() {
         current = unprocessed.front();
         head = current->getAxon()->getSynapseHead();
         curr = head;
-//        current->printPosition();
-//        printf ("%d\n", current->getAxon()->getNumSynapses());
+        printf ("%d ", current->getAxon()->getNumSynapses());
+        current->printPosition();
         // Send an action potential if necessary.
         if (current->activatePotential(current->process())) {
             // Add new Neurons to the queue if necessary
             for (int i = 0; i < current->getAxon()->getNumSynapses(); i++) {
                 isUnique = true;
                 check = curr->getTarget();
-                curr->trigger(ACTION_POTENTIAL);
+                curr->trigger(ACTION_POTENTIAL * curr->getWeight());
                 // Check for duplicates before pushing new Neurons into the queue.
                 for (std::list<Neuron*>::iterator it = processed.begin(); it != processed.end(); ++it) {
                     if ((*it)->equals(check)) {
@@ -281,6 +282,8 @@ void NeuralNetwork::updateCues(Neuron* motor, bool reinforce) {
 
         // Process the next Neuron.
         current = unprocessed.front();
+//        current->printPosition();
+//        printf ("%f\n", current->getCue());
         // Add new Neurons to the queue if necessary
         for (int i = 0; i < current->getConnSize(); i++) {
             isUnique = true;
@@ -313,7 +316,6 @@ void NeuralNetwork::updateCues(Neuron* motor, bool reinforce) {
 
     }
 
-    Synapse* head;
     Synapse* curr;
     // Update weights based on the targets' cue values and reset triggers.
     for (int res = 0; res < numReservoirs; res++) {
@@ -324,16 +326,22 @@ void NeuralNetwork::updateCues(Neuron* motor, bool reinforce) {
                     current->resetTrigger();
 //                    current->resetDendrites();
                     // Grow axon if necessary.
-                    current->getAxon()->setDirection();
-                    current->getAxon()->growDirection();
-                    head = current->getAxon()->getSynapseHead();
-                    curr = head;
-                    for (int i = 0; i < current->getAxon()->getNumSynapses(); i++) {
+//                    current->getAxon()->setDirection();
+//                    current->getAxon()->growDirection();
+                    curr = current->getAxon()->getSynapseHead();
+                    int numSyn = current->getAxon()->getNumSynapses();
+                    for (int s = 0; s < numSyn; s++) {
                         curr->changeWeight(WEIGHT_CHANGE * curr->getTarget()->getCue());   // Some function of the target cue.
-                        if (curr->getWeight() <= 0) {
+//                        for (int m = 0; m < numMotors; m++) {
+                            if (!(curr->getTarget()->equals(motors[0]))) {
+                                curr->changeLifespan(-1);
+                            }
+//                        }
+                        if (curr->getLifespan() <= 0) {
                             Synapse* temp = curr->getNext();
                             current->getAxon()->removeSynapse(curr);
                             curr = temp;
+                            s += 1;
                         }
                         else {
                             curr = curr->getNext();

@@ -102,10 +102,13 @@ void Axon::growDirection() {
             position[1] += round (direction[1]);
         if (position[2] + round (direction[2]) >= 0 && position[2] + round (direction[2]) < MAX_RES_SIZE)
             position[2] += round (direction[2]);
-        length += 1;
-        // Create Synapses
-        createSynapses();
-        //printPosition();
+
+//        if (round (direction[0]) > 0 || round (direction[1]) > 0 || round (direction[2]) > 0) {
+            length += 1;
+            // Create Synapses
+            createSynapses();
+            //printPosition();
+//        }
     }
 }
 
@@ -164,6 +167,9 @@ void Axon::removeSynapse(Synapse* target) {
     Synapse* prev = head;
     if (head == target) {
         head = head->getNext();
+        if (head == NULL) {
+            tail = head;
+        }
         delete prev;
         numSynapses -= 1;
         return;
@@ -202,7 +208,7 @@ void Axon::insertSynapse(Synapse* target) {
 
 void Axon::passSignal(float value) {
     // Reset axon if it no longer has any synapses.
-    if (head == NULL) {
+    if (numSynapses == 0) {
         position[0] = origin->getX();
         position[1] = origin->getY();
         position[2] = origin->getZ();
@@ -215,8 +221,8 @@ void Axon::passSignal(float value) {
 //        curr = curr->getNext();
 //    }
     // Grows the axon.
-//    setDirection();
-//    growDirection();
+    setDirection();
+    growDirection();
 }
 
 Synapse* Axon::getSynapseHead() {

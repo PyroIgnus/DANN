@@ -22,7 +22,9 @@ class Synapse
         void setNext(Synapse* next);
         void depreciate(float value);
         void changeWeight(float value);
+        void changeLifespan(float lifespan);
         float getWeight();
+        float getLifespan();
 
         /** Default destructor */
         virtual ~Synapse();
@@ -31,6 +33,7 @@ class Synapse
     private:
 
         float weight;
+        float lifespan;
         Neuron* target;
         Synapse* next;
 
