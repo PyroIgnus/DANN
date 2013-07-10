@@ -219,8 +219,8 @@ void NeuralNetwork::process() {
 
         // Process the next Neuron.
         current = unprocessed.front();
-        head = current->getAxon()->getSynapseHead();
-        curr = head;
+//        head = current->getAxon()->getSynapseHead();
+//        curr = head;
         printf ("%d ", current->getAxon()->getNumSynapses());
         current->printPosition();
         // Send an action potential if necessary.
@@ -228,6 +228,7 @@ void NeuralNetwork::process() {
             // Add new Neurons to the queue if necessary
             for (int i = 0; i < current->getAxon()->getNumSynapses(); i++) {
                 isUnique = true;
+                curr = current->getAxon()->getSynapseHead();
                 check = curr->getTarget();
                 curr->trigger(ACTION_POTENTIAL * curr->getWeight());
                 // Check for duplicates before pushing new Neurons into the queue.

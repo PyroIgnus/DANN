@@ -149,7 +149,7 @@ void Axon::retractSynapses() {
     Synapse* curr = head;
     Synapse* prev = head;
     while (curr) {
-        if (curr->getWeight() <= 0) {
+        if (curr->getLifespan() <= 0) {
             Synapse* temp = curr->getNext();
             removeSynapse(curr);
             curr = temp;
@@ -162,19 +162,20 @@ void Axon::retractSynapses() {
 }
 
 void Axon::removeSynapse(Synapse* target) {
+//    if (origin->getX() == 1 && origin->getY() == 1 && origin->getZ() == 3)
+//        printf ("This guy");
     // Remove the Synapse from the linked list.
-    Synapse* curr = head;
+    Synapse* curr = head->getNext();
     Synapse* prev = head;
     if (head == target) {
         head = head->getNext();
         if (head == NULL) {
-            tail = head;
+            tail = NULL;
         }
         delete prev;
         numSynapses -= 1;
         return;
     }
-    curr = head->getNext();
     while (curr) {
         if (curr == target) {
             if (curr == tail) {
@@ -183,7 +184,6 @@ void Axon::removeSynapse(Synapse* target) {
             prev->setNext(curr->getNext());
             delete curr;
             numSynapses -= 1;
-            printf ("%d ", numSynapses);
             return;
         }
         prev = curr;
@@ -193,11 +193,13 @@ void Axon::removeSynapse(Synapse* target) {
 }
 
 void Axon::insertSynapse(Synapse* target) {
+//    if (origin->getX() == 1 && origin->getY() == 1 && origin->getZ() == 3)
+//        printf ("This guy");
     // Insert the Synapse into the linked list.
-    if (numSynapses == 0) {
+    if (head == NULL || numSynapses == 0) {
         head = target;
         tail = target;
-        numSynapses = 1;
+        numSynapses += 1;
         return;
     }
     tail->setNext(target);

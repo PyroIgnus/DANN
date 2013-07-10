@@ -17,7 +17,7 @@ Reservoir::Reservoir(int resDimension)
     for (int i = 0; i < resSize; i++) {
         for (int j = 0; j < resSize; j++) {
             for (int k = 0; k < resSize; k++) {
-                cue = (float)rand()/((float)RAND_MAX/2) - 1;
+                cue = (float)rand()/((float)RAND_MAX/2) - 1;    // A random float value between -1 and 1.
                 neurons[i][j][k] = new Neuron(i, j, k, cue, this);
             }
         }
