@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1373521824 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\main.cpp
+1373564793 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\main.cpp
 	<stdio.h>
 	<string.h>
 	<time.h>
@@ -51,22 +51,23 @@
 	<stdio.h>
 	<math.h>
 
-1373520569 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\utils.h
+1373565539 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\utils.h
 	<stdio.h>
 
-1373522539 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\neuralnetwork.cpp
+1373565523 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\neuralnetwork.cpp
 	"NeuralNetwork.h"
 	<queue>
 	<list>
 	<stdlib.h>
 	<unistd.h>
+	<sys/time.h>
 
 1373521683 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\neuron.cpp
 	"Neuron.h"
 	<stdio.h>
 	<cmath>
 
-1373489518 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\reservoir.cpp
+1373564601 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\reservoir.cpp
 	"Reservoir.h"
 	<stdlib.h>
 

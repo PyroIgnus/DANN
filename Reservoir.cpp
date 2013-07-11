@@ -11,7 +11,7 @@ Reservoir::Reservoir()
 Reservoir::Reservoir(int resDimension)
 {
     float cue;
-    srand(8);
+    srand(CUE_SEED);
     resSize = resDimension;
     logger (file, "Creating Reservoir.\n");
     for (int i = 0; i < resSize; i++) {

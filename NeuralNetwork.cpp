@@ -3,13 +3,17 @@
 #include <list>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/time.h>
 
 // Default Constructor
 NeuralNetwork::NeuralNetwork()
 {
     char buff[200];
-    sprintf(buff, "Creating Neural Network.\nNumber of Reservoirs: %d\nReservoir dimension size: %d\nNumber of max inputs: %d\nMax axon length: %d\nMax number of synapses: %d\n",
-            NUM_RESERVOIRS, MAX_RES_SIZE, MAX_INPUTS, MAX_AXON_LENGTH, MAX_SYNAPSES);
+    sprintf(buff, "Creating Neural Network.\nCue initialization seed: %d\nNumber of Reservoirs: %d\nReservoir dimension size: %dx%dx%d\nNumber of max inputs: %d\nMax axon length: %d\nMax number of synapses: %d\n",
+            CUE_SEED, NUM_RESERVOIRS, MAX_RES_SIZE, MAX_RES_SIZE, MAX_RES_SIZE, MAX_INPUTS, MAX_AXON_LENGTH, MAX_SYNAPSES);
+    logger (file, buff);
+    sprintf(buff, "Search Radius: %d\nAction Potential: %d\nThreshold: %d\nAlpha learning rate(cue): %f\nBeta learning rate(weight): %f\n",
+            SEARCH_RADIUS, ACTION_POTENTIAL, THRESHOLD, CUE_CHANGE, WEIGHT_CHANGE);
     logger (file, buff);
     numReservoirs = NUM_RESERVOIRS;
     resDimension = MAX_RES_SIZE;
@@ -60,6 +64,11 @@ void NeuralNetwork::linkMotor(Neuron* target, Neuron* motor) {
 }
 
 void NeuralNetwork::trainAND() {
+    // Start timing.
+    struct timeval start_time, end_time;
+	gettimeofday(&start_time,NULL);
+	double t1=start_time.tv_sec+(start_time.tv_usec/1000000.0);
+
     // Method to train.  Probably specific to what the DANN is being trained for.
     std::vector<float> values;
     values.resize(NUM_SENSORS);
@@ -125,15 +134,25 @@ void NeuralNetwork::trainAND() {
 //        printf ("Test? (y/n): ");
 //        fscanf(stdin, "%d", &input);
     }
+
+    gettimeofday(&end_time,NULL);
+    double t2=end_time.tv_sec+(end_time.tv_usec/1000000.0);
+    double totaltime=t2-t1;
+
     printf ("Network successfully learned AND gate behaviour in %d iterations.\n", iterations);
     if (LOGGING) {
         char buff[100];
-        sprintf(buff, "Network successfully learned AND gate behaviour in %d iterations.\n", iterations);
+        sprintf(buff, "Network successfully learned AND gate behaviour in %d iterations and %.6lf seconds.\n", iterations, totaltime);
         logger(file, buff);
     }
 }
 
 void NeuralNetwork::trainOR() {
+    // Start timing.
+    struct timeval start_time, end_time;
+	gettimeofday(&start_time,NULL);
+	double t1=start_time.tv_sec+(start_time.tv_usec/1000000.0);
+
     // Method to train.  Probably specific to what the DANN is being trained for.
     std::vector<float> values;
     values.resize(NUM_SENSORS);
@@ -199,15 +218,25 @@ void NeuralNetwork::trainOR() {
 //        printf ("Test? (y/n): ");
 //        fscanf(stdin, "%d", &input);
     }
+
+    gettimeofday(&end_time,NULL);
+    double t2=end_time.tv_sec+(end_time.tv_usec/1000000.0);
+    double totaltime=t2-t1;
+
     printf ("Network successfully learned OR gate behaviour in %d iterations.\n", iterations);
     if (LOGGING) {
         char buff[100];
-        sprintf(buff, "Network successfully learned OR gate behaviour in %d iterations.\n", iterations);
+        sprintf(buff, "Network successfully learned OR gate behaviour in %d iterations and %.6lf seconds.\n", iterations, totaltime);
         logger(file, buff);
     }
 }
 
 void NeuralNetwork::trainXOR() {
+    // Start timing.
+    struct timeval start_time, end_time;
+	gettimeofday(&start_time,NULL);
+	double t1=start_time.tv_sec+(start_time.tv_usec/1000000.0);
+
     // Method to train.  Probably specific to what the DANN is being trained for.
     std::vector<float> values;
     values.resize(NUM_SENSORS);
@@ -279,10 +308,15 @@ void NeuralNetwork::trainXOR() {
 //        printf ("Test? (y/n): ");
 //        fscanf(stdin, "%d", &input);
     }
+
+    gettimeofday(&end_time,NULL);
+    double t2=end_time.tv_sec+(end_time.tv_usec/1000000.0);
+    double totaltime=t2-t1;
+
     printf ("Network successfully learned XOR gate behaviour in %d iterations.\n", iterations);
     if (LOGGING) {
         char buff[100];
-        sprintf(buff, "Network successfully learned XOR gate behaviour in %d iterations.\n", iterations);
+        sprintf(buff, "Network successfully learned XOR gate behaviour in %d iterations and %.6lf seconds.\n", iterations, totaltime);
         logger(file, buff);
     }
 }
