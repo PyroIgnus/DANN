@@ -24,6 +24,7 @@ class NeuralNetwork
         void linkMotor(Neuron* target, Neuron* motor);
         void trainAND();
         void trainOR();
+        void trainXOR();
         void updateSensors(std::vector<float> values);
         void process();
         void updateCues(Neuron* motor, bool reinforce);

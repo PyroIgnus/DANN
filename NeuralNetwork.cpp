@@ -207,6 +207,86 @@ void NeuralNetwork::trainOR() {
     }
 }
 
+void NeuralNetwork::trainXOR() {
+    // Method to train.  Probably specific to what the DANN is being trained for.
+    std::vector<float> values;
+    values.resize(NUM_SENSORS);
+//    printf ("Test? (y[1]/n[2]): ");
+    int input = 0;
+    int correct = 0;
+    int iterations = 0;
+    srand(0);
+
+//    fscanf (stdin, "%d", &input);
+    while (true) {
+        //usleep(999999);
+
+//        if (input == 1) {
+            // Test all combinations of 0 and 1 to see if the correct output is made.
+            for (int i = 0; i < 2; i++) {
+                values[0] = i * 100;
+                for (int j = 0; j < 2; j++) {
+                    values[1] = j * 100;
+                    updateSensors(values);
+                    process();
+                    if (motors[0]->isTriggered() == (i ^ j)) {
+                        correct += 1;
+                        motors[0]->resetTrigger();
+                    }
+                }
+            }
+            printf ("The DANN obtained a score of %d out of 4.\n", correct);
+            if (correct == 4) {
+                break;
+            }
+            correct = 0;
+//        }
+//        else if (input == 2) {
+            // Run through a random combination to train.
+            values[0] = (rand() % 2) * 100;
+            values[1] = (rand() % 2) * 100;
+            updateSensors(values);
+            process();
+            // Use updateCues() to update cues.
+            int i = 0;
+            int j = 0;
+            if (values[0] > 0)
+                i = 1;
+            if (values[1] > 0)
+                j = 1;
+            if (motors[0]->isTriggered() != (i ^ j)) {
+                updateCues(motors[0], motors[0]->isTriggered());
+            }
+            else {
+                //updateCues(motors[0], false);
+            }
+            // Show input-output relation.
+            if (values[0]) {
+                printf ("Input 0 is on.\n");
+            }
+            else {
+                printf ("Input 0 is off.\n");
+            }
+            if (values[1]) {
+                printf("Input 1 is on.\n");
+            }
+            else {
+                printf ("Input 1 is off.\n");
+            }
+            outputMotors();
+            iterations += 1;
+//        }
+//        printf ("Test? (y/n): ");
+//        fscanf(stdin, "%d", &input);
+    }
+    printf ("Network successfully learned XOR gate behaviour in %d iterations.\n", iterations);
+    if (LOGGING) {
+        char buff[100];
+        sprintf(buff, "Network successfully learned XOR gate behaviour in %d iterations.\n", iterations);
+        logger(file, buff);
+    }
+}
+
 void NeuralNetwork::updateSensors(std::vector<float> values) {
     // Update sensor Neuron dendrite values.  Specific to each Sensor.
     for (int i = 0; i < values.size(); i++) {
