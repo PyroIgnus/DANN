@@ -1,0 +1,15 @@
+Creating Neural Network.
+Number of Reservoirs: 1
+Reservoir dimension size: 4
+Number of max inputs: 1000
+Max axon length: 2
+Max number of synapses: 10000
+Creating Reservoir.
+Reservoir Successfully Created.
+Neural Network Successfully Created.
+Network successfully learned OR gate behaviour in 6 iterations.
+Network successfully learned AND gate behaviour in 117 iterations.
+Destroying Neural Network.
+Destroying Reservoir.
+Reservoir Successfully Destroyed.
+Neural Network Successfully destroyed.

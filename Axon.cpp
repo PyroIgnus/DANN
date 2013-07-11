@@ -4,12 +4,12 @@
 
 Axon::Axon()
 {
-    logger (file, "Axon created.\n");
+//    logger (file, "Axon created.\n");
 }
 
 Axon::Axon(int x, int y, int z, Neuron* origin)
 {
-    logger (file, "Axon created.\n");
+//    logger (file, "Axon created.\n");
 
     maxSynapses = MAX_SYNAPSES;
     maxAxonLength = MAX_AXON_LENGTH;
@@ -32,7 +32,7 @@ Axon::Axon(int x, int y, int z, Neuron* origin)
 
 Axon::Axon(int x, int y, int z, Neuron* origin, Reservoir* res)
 {
-    logger (file, "Axon created.\n");
+//    logger (file, "Axon created.\n");
 
     maxSynapses = MAX_SYNAPSES;
     maxAxonLength = MAX_AXON_LENGTH;
@@ -249,5 +249,5 @@ Axon::~Axon()
 //            delete synapse[i];
 //        }
 //    }
-    logger (file, "Axon destroyed.\n");
+//    logger (file, "Axon destroyed.\n");
 }

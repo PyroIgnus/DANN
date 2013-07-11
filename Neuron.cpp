@@ -4,7 +4,7 @@
 
 Neuron::Neuron()
 {
-    logger (file, "Neuron Created.\n");
+//    logger (file, "Neuron Created.\n");
     position[0] = -10;
     position[1] = -10;
     position[2] = -10;
@@ -28,7 +28,7 @@ Neuron::Neuron()
 
 Neuron::Neuron(int x, int y, int z) {
 
-    logger (file, "Neuron Created.\n");
+//    logger (file, "Neuron Created.\n");
     position[0] = x;
     position[1] = y;
     position[2] = z;
@@ -52,7 +52,7 @@ Neuron::Neuron(int x, int y, int z) {
 
 Neuron::Neuron(int x, int y, int z, float cue, Reservoir* res) {
 
-    logger (file, "Neuron Created.\n");
+//    logger (file, "Neuron Created.\n");
     position[0] = x;
     position[1] = y;
     position[2] = z;
@@ -204,5 +204,5 @@ void Neuron::printPosition() {
 Neuron::~Neuron()
 {
     //delete axon;
-    logger (file, "Neuron Destroyed.\n");
+//    logger (file, "Neuron Destroyed.\n");
 }

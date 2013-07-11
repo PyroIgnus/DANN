@@ -7,7 +7,10 @@
 // Default Constructor
 NeuralNetwork::NeuralNetwork()
 {
-    logger (file, "Creating Neural Network.\n");
+    char buff[200];
+    sprintf(buff, "Creating Neural Network.\nNumber of Reservoirs: %d\nReservoir dimension size: %d\nNumber of max inputs: %d\nMax axon length: %d\nMax number of synapses: %d\n",
+            NUM_RESERVOIRS, MAX_RES_SIZE, MAX_INPUTS, MAX_AXON_LENGTH, MAX_SYNAPSES);
+    logger (file, buff);
     numReservoirs = NUM_RESERVOIRS;
     resDimension = MAX_RES_SIZE;
     numSensors = NUM_SENSORS;
@@ -123,6 +126,11 @@ void NeuralNetwork::trainAND() {
 //        fscanf(stdin, "%d", &input);
     }
     printf ("Network successfully learned AND gate behaviour in %d iterations.\n", iterations);
+    if (LOGGING) {
+        char buff[100];
+        sprintf(buff, "Network successfully learned AND gate behaviour in %d iterations.\n", iterations);
+        logger(file, buff);
+    }
 }
 
 void NeuralNetwork::trainOR() {
@@ -192,6 +200,11 @@ void NeuralNetwork::trainOR() {
 //        fscanf(stdin, "%d", &input);
     }
     printf ("Network successfully learned OR gate behaviour in %d iterations.\n", iterations);
+    if (LOGGING) {
+        char buff[100];
+        sprintf(buff, "Network successfully learned OR gate behaviour in %d iterations.\n", iterations);
+        logger(file, buff);
+    }
 }
 
 void NeuralNetwork::updateSensors(std::vector<float> values) {

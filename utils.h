@@ -22,7 +22,7 @@
 #define CUE_CHANGE 0.125
 #define WEIGHT_CHANGE 0.125
 
-#define LOGGING 0
+#define LOGGING 1
 
 void logger(FILE *file, char *message);
 

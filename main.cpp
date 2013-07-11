@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
     struct tm * timeinfo;
     time ( &rawtime );
     timeinfo = localtime ( &rawtime );
-    strftime (buff, 80, "DNN-%Y-%m-%d-%H-%M-%S.log", timeinfo);
+    strftime (buff, 80, "logs/DNN-%Y-%m-%d-%H-%M-%S.log", timeinfo);
     if (LOGGING)
         file = fopen (buff, "w");
 
