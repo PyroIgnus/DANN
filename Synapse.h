@@ -15,7 +15,7 @@ class Synapse
         Synapse(Neuron* target, Neuron* origin);
         Synapse(float weight, Neuron* target, Neuron* origin);
 
-        void trigger(float value);
+        void trigger(float value, bool train);
         Neuron* getTarget();
         void setTarget(Neuron* target);
         Synapse* getNext();

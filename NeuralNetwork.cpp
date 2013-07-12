@@ -90,8 +90,8 @@ void NeuralNetwork::trainAND() {
                 for (int j = 0; j < 2; j++) {
                     values[1] = j * 100;
                     updateSensors(values);
-                    process();
-                    if (motors[0]->isTriggered() == (i && j)) {
+                    process(false);
+                    if (motors[0]->isTriggered() == ((i != 0) && (j != 0))) {
                         correct += 1;
                         motors[0]->resetTrigger();
                     }
@@ -108,9 +108,9 @@ void NeuralNetwork::trainAND() {
             values[0] = (rand() % 2) * 100;
             values[1] = (rand() % 2) * 100;
             updateSensors(values);
-            process();
+            process(true);
             // Use updateCues() to update cues.
-            if (motors[0]->isTriggered() != (values[0] && values[1])) {
+            if (motors[0]->isTriggered() != ((values[0] != 0) && (values[1] != 0))) {
                 updateCues(motors[0], motors[0]->isTriggered());
             }
             else {
@@ -174,7 +174,7 @@ void NeuralNetwork::trainOR() {
                 for (int j = 0; j < 2; j++) {
                     values[1] = j * 100;
                     updateSensors(values);
-                    process();
+                    process(false);
                     if (motors[0]->isTriggered() == (i || j)) {
                         correct += 1;
                         motors[0]->resetTrigger();
@@ -192,7 +192,7 @@ void NeuralNetwork::trainOR() {
             values[0] = (rand() % 2) * 100;
             values[1] = (rand() % 2) * 100;
             updateSensors(values);
-            process();
+            process(true);
             // Use updateCues() to update cues.
             if (motors[0]->isTriggered() != (values[0] || values[1])) {
                 updateCues(motors[0], motors[0]->isTriggered());
@@ -258,7 +258,7 @@ void NeuralNetwork::trainXOR() {
                 for (int j = 0; j < 2; j++) {
                     values[1] = j * 100;
                     updateSensors(values);
-                    process();
+                    process(false);
                     if (motors[0]->isTriggered() == (i ^ j)) {
                         correct += 1;
                         motors[0]->resetTrigger();
@@ -276,7 +276,7 @@ void NeuralNetwork::trainXOR() {
             values[0] = (rand() % 2) * 100;
             values[1] = (rand() % 2) * 100;
             updateSensors(values);
-            process();
+            process(true);
             // Use updateCues() to update cues.
             int i = 0;
             int j = 0;
@@ -329,7 +329,7 @@ void NeuralNetwork::updateSensors(std::vector<float> values) {
     }
 }
 
-void NeuralNetwork::process() {
+void NeuralNetwork::process(bool train) {
     // Commence a breadth first signal pass starting from the sensor Neurons.
     std::list<Neuron*> unprocessed;
     std::list<Neuron*> processed;
@@ -352,12 +352,12 @@ void NeuralNetwork::process() {
         curr = current->getAxon()->getSynapseHead();
         int numSynapses = current->getAxon()->getNumSynapses();
         // Send an action potential if necessary.
-        if (current->activatePotential(current->process())) {
+        if (current->activatePotential(current->process(), train)) {
             // Add new Neurons to the queue if necessary
             for (int i = 0; i < numSynapses; i++) {
                 isUnique = true;
                 check = curr->getTarget();
-                curr->trigger(ACTION_POTENTIAL * curr->getWeight());
+                curr->trigger(ACTION_POTENTIAL * curr->getWeight(), train);
                 // Check for duplicates before pushing new Neurons into the queue.
                 for (std::list<Neuron*>::iterator it = processed.begin(); it != processed.end(); ++it) {
                     if ((*it)->equals(check)) {
@@ -402,7 +402,7 @@ void NeuralNetwork::updateCues(Neuron* motor, bool reinforce) {
     }
 
     unprocessed.push_back(motor);
-    for (int i = 0; i < numMotors; i++) {
+    for (int i = 0; i < numSensors; i++) {
         processed.push_back(sensors[i]);
     }
 
@@ -434,7 +434,7 @@ void NeuralNetwork::updateCues(Neuron* motor, bool reinforce) {
             }
         }
         // Update cues if necessary.
-        if (counter >= numMotors) {
+        if (!current->isOutput()) {
             current->changeCue(change);
         }
         counter += 1;

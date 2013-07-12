@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
 			"> 4) Empty\n"
 			"> 5) Empty\n"
 			"> 6) Exit\n"
-			"> 7) Empty\n"
+			"> 7) Load settings and create neural network\n"
 			"> 8) Load new settings from config file\n"
 			"> 9) Reset/Remake neural network\n"
 			"> Press '0' to display menu\n"
@@ -82,6 +82,7 @@ int main(int argc, char *argv[]) {
                     printf ("Ending current Neural Network.\n");
                     delete net;
                     printf ("Neural Network successfully ended.\n");
+                    logger (file, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
                 }
                 printf ("Starting new Neural Network:\n");
                 net = new NeuralNetwork();
@@ -96,6 +97,7 @@ int main(int argc, char *argv[]) {
                     printf ("Ending current Neural Network.\n");
                     delete net;
                     printf ("Neural Network successfully ended.\n");
+                    logger (file, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
                 }
                 printf ("Starting new Neural Network:\n");
                 net = new NeuralNetwork();

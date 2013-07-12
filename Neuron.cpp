@@ -132,10 +132,11 @@ float Neuron::process() {
     return result;
 }
 
-bool Neuron::activatePotential(float value) {
+bool Neuron::activatePotential(float value, bool grow) {
     // If the value exceeds the threshold, then pass value into axon (passSignal()).
     if (value >= threshold) {
-        axon->passSignal(ACTION_POTENTIAL); // All-or-none response.
+        if (grow)
+            axon->passSignal(ACTION_POTENTIAL); // All-or-none response.
         triggered = true;
         //logger(file, "Action potential fired.");
         return true;

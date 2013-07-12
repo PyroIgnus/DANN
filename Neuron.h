@@ -22,7 +22,7 @@ class Neuron
         void removeConnection(Neuron* source);
         virtual void acceptSignal(float value, Neuron* source);
         float process();
-        bool activatePotential(float value);
+        bool activatePotential(float value, bool grow);
         void changeCue(float value);
         void setCue(float value);
         bool equals (Neuron* other);

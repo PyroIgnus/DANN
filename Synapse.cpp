@@ -28,11 +28,12 @@ Synapse::Synapse(float weight, Neuron* target, Neuron* origin) {
     target->addConnection(origin);
 }
 
-void Synapse::trigger(float value) {
+void Synapse::trigger(float value, bool train) {
     target->acceptSignal(value, origin);
     // Increment weight/lifespan.  Use only when reinforcement of action is required.  Won't need this until the system is autonomous.
     //changeWeight(0.01);
-    changeLifespan(1.5);
+    if (train)
+        changeLifespan(1.5);
 }
 
 Neuron* Synapse::getTarget() {

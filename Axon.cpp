@@ -222,6 +222,7 @@ void Axon::passSignal(float value) {
 //        curr->trigger(value);
 //        curr = curr->getNext();
 //    }
+
     // Grows the axon.
     setDirection();
     growDirection();
