@@ -394,7 +394,7 @@ void NeuralNetwork::updateCues(Neuron* motor, bool reinforce) {
     Neuron* current;
     Neuron* check;
     bool isUnique;
-    bool state = motors[0]->isTriggered();
+    bool state = motor->isTriggered();
     int counter = 0;
     float change = CUE_CHANGE;
     if (reinforce) {
