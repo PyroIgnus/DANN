@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1373564793 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\main.cpp
+1373660661 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\main.cpp
 	<stdio.h>
 	<string.h>
 	<time.h>
@@ -14,12 +14,12 @@
 	"utils.h"
 	"global.h"
 
-1369243330 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\reservoir.h
+1373604587 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\reservoir.h
 	"Neuron.h"
 	"utils.h"
 	"global.h"
 
-1370302103 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\neuron.h
+1373568022 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\neuron.h
 	"Axon.h"
 	"Reservoir.h"
 	"utils.h"
@@ -51,10 +51,10 @@
 	<stdio.h>
 	<math.h>
 
-1373565539 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\utils.h
+1373660645 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\utils.h
 	<stdio.h>
 
-1373565523 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\neuralnetwork.cpp
+1373568020 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\neuralnetwork.cpp
 	"NeuralNetwork.h"
 	<queue>
 	<list>
@@ -62,7 +62,7 @@
 	<unistd.h>
 	<sys/time.h>
 
-1373521683 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\neuron.cpp
+1373567998 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\neuron.cpp
 	"Neuron.h"
 	<stdio.h>
 	<cmath>
@@ -75,13 +75,19 @@
 	"Synapse.h"
 	<cmath>
 
-1368908221 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\utils.cpp
+1373659444 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\utils.cpp
 	"utils.h"
 	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"global.h"
 
-1368804910 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\global.h
+1373604882 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\global.h
 	<stdio.h>
 
-1368804785 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\global.cpp
+1373604882 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\global.cpp
+	<stdio.h>
+
+1373604529 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\global.cpp
 	<stdio.h>
 

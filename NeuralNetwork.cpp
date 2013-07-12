@@ -34,6 +34,7 @@ NeuralNetwork::NeuralNetwork()
     }
     for (int i = 0; i < numMotors; i++) {
         motors[i] = new Neuron(resDimension + 10 + i + i, resDimension + 10 + i + i, resDimension + 10 + i + i);
+        motors[i]->makeOutput(true);
     }
     // Force link sensors and motors to reservoirs.  Unique to the network.
     for (int i = 0; i < numSensors; i++) {
@@ -451,19 +452,13 @@ void NeuralNetwork::updateCues(Neuron* motor, bool reinforce) {
                 for (int k = 0; k < resDimension; k++) {
                     current = reservoir[res]->getNeuron(i, j, k);
                     current->resetTrigger();
-//                    current->resetDendrites();
-                    // Grow axon if necessary.
-//                    current->getAxon()->setDirection();
-//                    current->getAxon()->growDirection();
                     curr = current->getAxon()->getSynapseHead();
                     int numSyn = current->getAxon()->getNumSynapses();
                     for (int s = 0; s < numSyn; s++) {
                         curr->changeWeight(WEIGHT_CHANGE * curr->getTarget()->getCue());   // Some function of the target cue.
-//                        for (int m = 0; m < numMotors; m++) {
-                            if (!(curr->getTarget()->equals(motors[0]))) {
-                                curr->changeLifespan(-1);
-                            }
-//                        }
+                        if (!(curr->getTarget()->isOutput())) {
+                            curr->changeLifespan(-1);
+                        }
                         if (curr->getLifespan() <= 0) {
                             Synapse* temp = curr->getNext();
                             current->getAxon()->removeSynapse(curr);

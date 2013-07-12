@@ -8,6 +8,7 @@ Neuron::Neuron()
     position[0] = -10;
     position[1] = -10;
     position[2] = -10;
+    output = false;
     alive = true;
     triggered = false;
     cue = 0;
@@ -32,6 +33,7 @@ Neuron::Neuron(int x, int y, int z) {
     position[0] = x;
     position[1] = y;
     position[2] = z;
+    output = false;
     alive = true;
     triggered = false;
     cue = 0;    //(x + y + z) % 2;  // "Random" cue value for unspecified cues.
@@ -56,6 +58,7 @@ Neuron::Neuron(int x, int y, int z, float cue, Reservoir* res) {
     position[0] = x;
     position[1] = y;
     position[2] = z;
+    output = false;
     alive = true;
     triggered = false;
     this->cue = cue;
@@ -157,6 +160,10 @@ bool Neuron::equals(Neuron* other) {
     return false;
 }
 
+void Neuron::makeOutput(bool value) {
+    output = value;
+}
+
 void Neuron::resetTrigger() {
     triggered = false;
 }
@@ -191,6 +198,10 @@ int Neuron::getConnSize() {
 
 float Neuron::getCue() {
     return cue;
+}
+
+bool Neuron::isOutput() {
+    return output;
 }
 
 bool Neuron::isTriggered() {
