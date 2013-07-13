@@ -19,5 +19,7 @@ extern int RECOVERY_THRESHOLD;
 extern int INITIAL_SYNAPSE_WEIGHT;
 extern float CUE_CHANGE;
 extern float WEIGHT_CHANGE;
+extern float LIFESPAN_INCREASE;
+extern float LIFESPAN_DECREASE;
 
 #endif // GLOBAL_H

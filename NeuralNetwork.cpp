@@ -40,8 +40,10 @@ NeuralNetwork::NeuralNetwork()
     for (int i = 0; i < numSensors; i++) {
         linkSensor(sensors[i], reservoir[0]->getNeuron(i + 1, 0, 0));
     }
+    linkReservoir(reservoir[0]->getNeuron(1, 1, 0), reservoir[1]->getNeuron(0, 1, 1));
+    linkReservoir(reservoir[1]->getNeuron(1, 1, 0), reservoir[1]->getNeuron(1, 1, 2));
     for (int i = 0; i < numMotors; i++) {
-        linkMotor(reservoir[0]->getNeuron(resDimension - 1, resDimension - 1, i), motors[i]);
+        linkMotor(reservoir[1]->getNeuron(resDimension - 1, resDimension - 1, i), motors[i]);
     }
 
     logger (file, "Neural Network Successfully Created.\n");
@@ -90,9 +92,6 @@ void NeuralNetwork::trainAND() {
 
 //        if (input == 1) {
             // Test all combinations of 0 and 1 to see if the correct output is made.
-            if (iterations == 26){
-                printf ("here\n");
-            }
             for (int i = 0; i < 2; i++) {
                 values[0] = i * 100;
                 for (int j = 0; j < 2; j++) {
@@ -476,7 +475,7 @@ void NeuralNetwork::updateCues(Neuron* motor, bool reinforce) {
                     for (int s = 0; s < numSyn; s++) {
                         curr->changeWeight(WEIGHT_CHANGE * curr->getTarget()->getCue());   // Some function of the target cue.
                         if (!(curr->getTarget()->isOutput())) {
-                            curr->changeLifespan(-1);
+                            curr->changeLifespan(-1 * LIFESPAN_DECREASE);
                         }
                         if (curr->getLifespan() <= 0) {
                             Synapse* temp = curr->getNext();

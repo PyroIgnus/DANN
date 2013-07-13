@@ -35,7 +35,7 @@ void Synapse::trigger(float value, bool train) {
     // Increment weight/lifespan.  Use only when reinforcement of action is required.  Won't need this until the system is autonomous.
     //changeWeight(0.01);
     if (train && permanent)
-        changeLifespan(1.5);
+        changeLifespan(LIFESPAN_INCREASE);
 }
 
 Neuron* Synapse::getTarget() {

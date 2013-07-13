@@ -61,6 +61,12 @@ int process_config_line(char *line)
 	else if (strcmp(name, "WEIGHT_CHANGE") == 0) {
         WEIGHT_CHANGE = (float)atof(value);
 	}
+	else if (strcmp(name, "LIFESPAN_INCREASE") == 0) {
+        LIFESPAN_INCREASE = (float)atof(value);
+	}
+	else if (strcmp(name, "LIFESPAN_DECREASE") == 0) {
+        LIFESPAN_DECREASE = (float)atof(value);
+	}
 	else {
 		// Ignore unknown config parameters.
 	}
