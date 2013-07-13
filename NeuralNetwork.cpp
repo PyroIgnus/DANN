@@ -85,13 +85,16 @@ void NeuralNetwork::trainAND() {
 
 //        if (input == 1) {
             // Test all combinations of 0 and 1 to see if the correct output is made.
+            if (iterations == 26){
+                printf ("here\n");
+            }
             for (int i = 0; i < 2; i++) {
                 values[0] = i * 100;
                 for (int j = 0; j < 2; j++) {
                     values[1] = j * 100;
                     updateSensors(values);
                     process(false);
-                    if (motors[0]->isTriggered() == ((i != 0) && (j != 0))) {
+                    if (motors[0]->isTriggered() == (i && j)) {
                         correct += 1;
                         motors[0]->resetTrigger();
                     }
@@ -383,6 +386,17 @@ void NeuralNetwork::process(bool train) {
         // Remove Neuron as it has just been processed.
         unprocessed.pop_front();
 
+    }
+
+    for (int res = 0; res < numReservoirs; res++) {
+        for (int i = 0; i < resDimension; i++) {
+            for (int j = 0; j < resDimension; j++) {
+                for (int k = 0; k < resDimension; k++) {
+                    current = reservoir[res]->getNeuron(i, j, k);
+                    current->resetDendrites();
+                }
+            }
+        }
     }
 }
 
