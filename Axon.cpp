@@ -113,7 +113,7 @@ void Axon::growDirection() {
 }
 
 void Axon::forceLink(Neuron* target) {
-    // Force create a Synapse to the target Neuron.
+    // Force create a Synapse to the target Neuron permanently.
     insertSynapse(new Synapse(target, origin));
 }
 

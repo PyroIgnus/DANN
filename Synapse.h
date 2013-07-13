@@ -23,6 +23,7 @@ class Synapse
         void depreciate(float value);
         void changeWeight(float value);
         void changeLifespan(float lifespan);
+        void makePerm();
         float getWeight();
         float getLifespan();
 
@@ -34,6 +35,7 @@ class Synapse
 
         float weight;
         float lifespan;
+        bool permanent;
         Neuron* target;
         Synapse* next;
 

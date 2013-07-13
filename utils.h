@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-#define NUM_RESERVOIRS 1
+#define NUM_RESERVOIRS 2
 //#define CUE_SEED 0
 #define MAX_RES_SIZE 4
 #define NUM_SENSORS 2

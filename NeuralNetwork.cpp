@@ -47,6 +47,7 @@ NeuralNetwork::NeuralNetwork()
     logger (file, "Neural Network Successfully Created.\n");
 }
 
+// Might not use.
 NeuralNetwork::NeuralNetwork(char* filename)
 {
 
@@ -62,6 +63,10 @@ void NeuralNetwork::linkMotor(Neuron* target, Neuron* motor) {
     // Link the target Neuron to motor Neuron by means of axon and synapses.
     target->getAxon()->forceLink(motor);
     target->setCue(1.0);
+}
+
+void NeuralNetwork::linkReservoir(Neuron* source, Neuron* target) {
+    source->getAxon()->forceLink(target);
 }
 
 void NeuralNetwork::trainAND() {
@@ -355,7 +360,7 @@ void NeuralNetwork::process(bool train) {
         curr = current->getAxon()->getSynapseHead();
         int numSynapses = current->getAxon()->getNumSynapses();
         // Send an action potential if necessary.
-        if (current->activatePotential(current->process(), train)) {
+        if (current->activatePotential(current->process())) {
             // Add new Neurons to the queue if necessary
             for (int i = 0; i < numSynapses; i++) {
                 isUnique = true;
@@ -388,16 +393,16 @@ void NeuralNetwork::process(bool train) {
 
     }
 
-    for (int res = 0; res < numReservoirs; res++) {
-        for (int i = 0; i < resDimension; i++) {
-            for (int j = 0; j < resDimension; j++) {
-                for (int k = 0; k < resDimension; k++) {
-                    current = reservoir[res]->getNeuron(i, j, k);
-                    current->resetDendrites();
-                }
-            }
-        }
-    }
+//    for (int res = 0; res < numReservoirs; res++) {
+//        for (int i = 0; i < resDimension; i++) {
+//            for (int j = 0; j < resDimension; j++) {
+//                for (int k = 0; k < resDimension; k++) {
+//                    current = reservoir[res]->getNeuron(i, j, k);
+//                    current->resetDendrites();
+//                }
+//            }
+//        }
+//    }
 }
 
 void NeuralNetwork::updateCues(Neuron* motor, bool reinforce) {

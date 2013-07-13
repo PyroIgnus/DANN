@@ -8,7 +8,7 @@
 	"utils.h"
 	"global.h"
 
-1373664125 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\neuralnetwork.h
+1373729563 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\neuralnetwork.h
 	"Reservoir.h"
 	"Neuron.h"
 	"utils.h"
@@ -19,7 +19,7 @@
 	"utils.h"
 	"global.h"
 
-1373664125 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\neuron.h
+1373682579 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\neuron.h
 	"Axon.h"
 	"Reservoir.h"
 	"utils.h"
@@ -33,7 +33,7 @@
 	"global.h"
 	<vector>
 
-1373665359 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\synapse.h
+1373729465 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\synapse.h
 	"Neuron.h"
 	"global.h"
 	"utils.h"
@@ -46,15 +46,15 @@
 1368718256 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\axon.cpp
 	"Axon.h"
 
-1373667044 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\axon.cpp
+1373730083 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\axon.cpp
 	"Axon.h"
 	<stdio.h>
 	<math.h>
 
-1373662817 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\utils.h
+1373727820 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\utils.h
 	<stdio.h>
 
-1373681678 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\neuralnetwork.cpp
+1373728875 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\neuralnetwork.cpp
 	"NeuralNetwork.h"
 	<queue>
 	<list>
@@ -62,7 +62,7 @@
 	<unistd.h>
 	<sys/time.h>
 
-1373665328 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\neuron.cpp
+1373682579 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\neuron.cpp
 	"Neuron.h"
 	<stdio.h>
 	<cmath>
@@ -71,7 +71,7 @@
 	"Reservoir.h"
 	<stdlib.h>
 
-1373665328 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\synapse.cpp
+1373729563 source:c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\synapse.cpp
 	"Synapse.h"
 	<cmath>
 
