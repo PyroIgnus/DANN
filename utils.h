@@ -30,5 +30,6 @@ static const char CONFIG_COMMENT_CHAR = '#';
 void logger(FILE *file, char *message);
 int read_config(char *config_file);
 int process_config_line(char *line);
+void readMNIST(char* image_file, FILE* label_file, int num, int*** images, int* labels);
 
 #endif

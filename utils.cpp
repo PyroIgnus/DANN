@@ -102,3 +102,40 @@ int read_config(char *config_file)
 
 	return error_occurred ? -1 : 0;
 }
+
+void readMNIST(char* image_filename, char* label_filename, int num, int*** images, int* labels) {
+    char* buff;
+    int imageNum = 0;
+    int line = 0;
+    // Load labels from file.
+    FILE* label_file = fopen(label_filename, "r");
+    if (label_file == NULL) {
+        printf ("Error opening file: %s\n", label_filename);
+        return;
+    }
+    while (fgets(buff, 60000, label_file) != NULL) {
+        for (int i = 0; i < strlen(buff); i++) {
+            char temp = buff[i];
+            labels[i] = temp - '0';
+        }
+    }
+    printf("Labels finished loading.\n");
+    // Load image data from file.
+    FILE* image_file = fopen(image_filename, "r");
+    if (image_file == NULL) {
+        printf ("Error opening file: %s\n", image_filename);
+        return;
+    }
+    while (fgets(buff, 100, image_file) != NULL) {
+        if (strcmp(buff, "\n") == 0) {
+            line = 0;
+            imageNum += 1;
+        }
+        for (int i = 0; i < 28; i++) {
+            sscanf(buff, "%d\t", images[imageNum][line][i]);
+        }
+        line += 1;
+    }
+    printf("Images finished loading.\n");
+    return;
+}

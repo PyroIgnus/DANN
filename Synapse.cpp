@@ -34,7 +34,7 @@ void Synapse::trigger(float value, bool train) {
     target->acceptSignal(value, origin);
     // Increment weight/lifespan.  Use only when reinforcement of action is required.  Won't need this until the system is autonomous.
     //changeWeight(0.01);
-    if (train && permanent)
+    if (train)
         changeLifespan(LIFESPAN_INCREASE);
 }
 

@@ -200,6 +200,10 @@ float Neuron::getCue() {
     return cue;
 }
 
+bool Neuron::isAlive() {
+    return alive;
+}
+
 bool Neuron::isOutput() {
     return output;
 }

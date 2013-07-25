@@ -71,14 +71,18 @@ void Axon::setDirection() {
                             dirVec[1] = position[1] - j;
                             dirVec[2] = position[2] - k;
                             if (origin->getRes() != NULL) {
-                                direction[0] += origin->getRes()->getNeuron(i, j, k)->getCue() / (dirVec[0] * dirVec[0]);
-                                direction[1] += origin->getRes()->getNeuron(i, j, k)->getCue() / (dirVec[1] * dirVec[1]);
-                                direction[2] += origin->getRes()->getNeuron(i, j, k)->getCue() / (dirVec[2] * dirVec[2]);
+                                if (origin->getRes()->getNeuron(i, j, k)->isAlive()) {
+                                    direction[0] += origin->getRes()->getNeuron(i, j, k)->getCue() / (dirVec[0] * dirVec[0]);
+                                    direction[1] += origin->getRes()->getNeuron(i, j, k)->getCue() / (dirVec[1] * dirVec[1]);
+                                    direction[2] += origin->getRes()->getNeuron(i, j, k)->getCue() / (dirVec[2] * dirVec[2]);
+                                }
                             }
                             else {
-                                direction[0] += res->getNeuron(i, j, k)->getCue() / (dirVec[0] * dirVec[0]);
-                                direction[1] += res->getNeuron(i, j, k)->getCue() / (dirVec[1] * dirVec[1]);
-                                direction[2] += res->getNeuron(i, j, k)->getCue() / (dirVec[2] * dirVec[2]);
+                                if (res->getNeuron(i, j, k)->isAlive()) {
+                                    direction[0] += res->getNeuron(i, j, k)->getCue() / (dirVec[0] * dirVec[0]);
+                                    direction[1] += res->getNeuron(i, j, k)->getCue() / (dirVec[1] * dirVec[1]);
+                                    direction[2] += res->getNeuron(i, j, k)->getCue() / (dirVec[2] * dirVec[2]);
+                                }
                             }
                         }
                     }
@@ -126,12 +130,12 @@ void Axon::createSynapses() {
                     for (int k = position[2] - SEARCH_RADIUS; k <= position[2] + SEARCH_RADIUS; k++) {
                         if (k >= 0 && k < MAX_RES_SIZE) {
                             if (origin->getRes() != NULL) {
-                                if (origin->getRes()->getNeuron(i, j, k)->getCue() > 0) {
+                                if (origin->getRes()->getNeuron(i, j, k)->getCue() > 0 && origin->getRes()->getNeuron(i, j, k)->isAlive()) {
                                     insertSynapse(new Synapse(origin->getRes()->getNeuron(i, j, k)->getCue()/26, origin->getRes()->getNeuron(i, j, k), origin));
                                 }
                             }
                             else {
-                                if (res->getNeuron(i, j, k)->getCue() > 0) {
+                                if (res->getNeuron(i, j, k)->getCue() > 0 && origin->getRes()->getNeuron(i, j, k)->isAlive()) {
                                     insertSynapse(new Synapse(res->getNeuron(i, j, k)->getCue()/26, res->getNeuron(i, j, k), origin));
                                 }
                             }

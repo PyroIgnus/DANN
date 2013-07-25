@@ -36,6 +36,7 @@ class Neuron
         Neuron* getConnection(int index);
         int getConnSize();
         float getCue();
+        bool isAlive();
         bool isOutput();
         bool isTriggered();
         inline Reservoir* getRes() {

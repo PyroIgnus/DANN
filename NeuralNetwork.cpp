@@ -12,8 +12,8 @@ NeuralNetwork::NeuralNetwork()
     sprintf(buff, "Creating Neural Network.\nCue initialization seed: %d\nNumber of Reservoirs: %d\nReservoir dimension size: %dx%dx%d\nNumber of max inputs: %d\nMax axon length: %d\nMax number of synapses: %d\n",
             CUE_SEED, NUM_RESERVOIRS, MAX_RES_SIZE, MAX_RES_SIZE, MAX_RES_SIZE, MAX_INPUTS, MAX_AXON_LENGTH, MAX_SYNAPSES);
     logger (file, buff);
-    sprintf(buff, "Search Radius: %d\nAction Potential: %d\nThreshold: %d\nAlpha learning rate(cue): %f\nBeta learning rate(weight): %f\n",
-            SEARCH_RADIUS, ACTION_POTENTIAL, THRESHOLD, CUE_CHANGE, WEIGHT_CHANGE);
+    sprintf(buff, "Search Radius: %d\nAction Potential: %d\nThreshold: %d\nAlpha learning rate(cue): %f\nBeta learning rate(weight): %f\nSynapse lifespan increase: %f\nSynapse lifespan decrease: %f\n",
+            SEARCH_RADIUS, ACTION_POTENTIAL, THRESHOLD, CUE_CHANGE, WEIGHT_CHANGE, LIFESPAN_INCREASE, LIFESPAN_DECREASE);
     logger (file, buff);
     numReservoirs = NUM_RESERVOIRS;
     resDimension = MAX_RES_SIZE;
@@ -392,6 +392,7 @@ void NeuralNetwork::process(bool train) {
 
     }
 
+// Used to empty all dendrites.  Most likely won't use.
 //    for (int res = 0; res < numReservoirs; res++) {
 //        for (int i = 0; i < resDimension; i++) {
 //            for (int j = 0; j < resDimension; j++) {
