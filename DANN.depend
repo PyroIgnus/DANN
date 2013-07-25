@@ -91,3 +91,84 @@
 1373604529 c:\users\jonathon wong\documents\university\2013\summer\dann\code\dann\global.cpp
 	<stdio.h>
 
+1374779382 source:y:\dropbox\dann\axon.cpp
+	"Axon.h"
+	<stdio.h>
+	<math.h>
+
+1374779034 y:\dropbox\dann\axon.h
+	"Synapse.h"
+	"Reservoir.h"
+	"utils.h"
+	"global.h"
+	<vector>
+
+1374779382 y:\dropbox\dann\synapse.h
+	"Neuron.h"
+	"global.h"
+	"utils.h"
+
+1374779382 y:\dropbox\dann\neuron.h
+	"Axon.h"
+	"Reservoir.h"
+	"utils.h"
+	"global.h"
+	<vector>
+
+1374779034 y:\dropbox\dann\reservoir.h
+	"Neuron.h"
+	"utils.h"
+	"global.h"
+
+1374795182 y:\dropbox\dann\utils.h
+	<stdio.h>
+
+1374779382 y:\dropbox\dann\global.h
+	<stdio.h>
+
+1374779382 source:y:\dropbox\dann\global.cpp
+	<stdio.h>
+
+1374795610 source:y:\dropbox\dann\main.cpp
+	<stdio.h>
+	<string.h>
+	<time.h>
+	<sys/time.h>
+	"NeuralNetwork.h"
+	"utils.h"
+	"global.h"
+
+1374779382 y:\dropbox\dann\neuralnetwork.h
+	"Reservoir.h"
+	"Neuron.h"
+	"utils.h"
+	"global.h"
+
+1374779382 source:y:\dropbox\dann\neuralnetwork.cpp
+	"NeuralNetwork.h"
+	<queue>
+	<list>
+	<stdlib.h>
+	<unistd.h>
+	<sys/time.h>
+
+1374779382 source:y:\dropbox\dann\neuron.cpp
+	"Neuron.h"
+	<stdio.h>
+	<cmath>
+
+1374779382 source:y:\dropbox\dann\reservoir.cpp
+	"Reservoir.h"
+	<stdlib.h>
+
+1374779382 source:y:\dropbox\dann\synapse.cpp
+	"Synapse.h"
+	<cmath>
+
+1374794144 source:y:\dropbox\dann\utils.cpp
+	"utils.h"
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"global.h"
+

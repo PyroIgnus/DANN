@@ -9,6 +9,10 @@
 #define NUM_SENSORS 2
 #define NUM_MOTORS 1
 #define MAX_INPUTS 1000
+
+#define MNIST_LENGTH 60000
+#define MNIST_IMAGE_DIM 28
+#define MNIST_PROGRESS_IND 5000
 //#define MAX_AXON_LENGTH 2
 //#define MAX_SYNAPSES 10000
 //#define MAX_WEIGHT 1
@@ -30,6 +34,7 @@ static const char CONFIG_COMMENT_CHAR = '#';
 void logger(FILE *file, char *message);
 int read_config(char *config_file);
 int process_config_line(char *line);
-void readMNIST(char* image_file, FILE* label_file, int num, int*** images, int* labels);
+void readMNIST(char* image_filename, char* label_filename, int*** images, int* labels);
+void printMNIST(int imageIndex);
 
 #endif

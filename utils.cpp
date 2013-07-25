@@ -103,8 +103,8 @@ int read_config(char *config_file)
 	return error_occurred ? -1 : 0;
 }
 
-void readMNIST(char* image_filename, char* label_filename, int num, int*** images, int* labels) {
-    char* buff;
+void readMNIST(char* image_filename, char* label_filename, int*** images, int* labels) {
+    char buff[MNIST_LENGTH+1];
     int imageNum = 0;
     int line = 0;
     // Load labels from file.
@@ -113,10 +113,13 @@ void readMNIST(char* image_filename, char* label_filename, int num, int*** image
         printf ("Error opening file: %s\n", label_filename);
         return;
     }
-    while (fgets(buff, 60000, label_file) != NULL) {
+    while (fgets(buff, MNIST_LENGTH+1, label_file) != NULL) {
         for (int i = 0; i < strlen(buff); i++) {
             char temp = buff[i];
             labels[i] = temp - '0';
+            if (i % MNIST_PROGRESS_IND == 0) {
+                printf("Loading label: %d\n", i);
+            }
         }
     }
     printf("Labels finished loading.\n");
@@ -126,16 +129,33 @@ void readMNIST(char* image_filename, char* label_filename, int num, int*** image
         printf ("Error opening file: %s\n", image_filename);
         return;
     }
-    while (fgets(buff, 100, image_file) != NULL) {
-        if (strcmp(buff, "\n") == 0) {
+    char buffimg[115];
+    while (fgets(buffimg, 115, image_file) != NULL) {
+        if (strcmp(buffimg, "\n") == 0) {
             line = 0;
             imageNum += 1;
+            if (imageNum % MNIST_PROGRESS_IND == 0) {
+                printf("Loading image: %d\n", imageNum);
+            }
         }
-        for (int i = 0; i < 28; i++) {
-            sscanf(buff, "%d\t", images[imageNum][line][i]);
+        else{
+            images[imageNum][line][0] = atoi(strtok(buffimg, "\t"));
+            for (int i = 0; i < 28; i++) {
+                images[imageNum][line][i] = atoi(strtok(NULL, "\t"));
+            }
+            line += 1;
         }
-        line += 1;
     }
     printf("Images finished loading.\n");
     return;
 }
+
+//void printMNIST(int imageIndex) {
+//    printf("Image: %d which is a %d\n", imageIndex, labels[imageIndex]);
+//    for (int i = 0; i < 28; i++) {
+//        for (int j = 0; j < 28; j++) {
+//            printf("%d", images[imageIndex][i][j]);
+//        }
+//        printf("\n");
+//    }
+//}
