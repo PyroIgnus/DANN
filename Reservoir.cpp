@@ -1,4 +1,5 @@
 #include "Reservoir.h"
+#include <stdlib.h>
 
 Reservoir::Reservoir()
 {
@@ -9,24 +10,26 @@ Reservoir::Reservoir()
 
 Reservoir::Reservoir(int resDimension)
 {
-
+    float cue;
+    srand(CUE_SEED);
     resSize = resDimension;
     logger (file, "Creating Reservoir.\n");
     for (int i = 0; i < resSize; i++) {
         for (int j = 0; j < resSize; j++) {
             for (int k = 0; k < resSize; k++) {
-                neurons[i][j][k] = new Neuron(i, j, k, 1.0, this);
+                cue = (float)rand()/((float)RAND_MAX/2) - 1;    // A random float value between -1 and 1.
+                neurons[i][j][k] = new Neuron(i, j, k, cue, this);
             }
         }
     }
-//    for (int i = 0; i < resSize; i++) {
-//        for (int j = 0; j < resSize; j++) {
-//            for (int k = 0; k < resSize; k++) {
-//                neurons[i][j][k]->getAxon()->setDirection();
-//                neurons[i][j][k]->getAxon()->growDirection();
-//            }
-//        }
-//    }
+    for (int i = 0; i < resSize; i++) {
+        for (int j = 0; j < resSize; j++) {
+            for (int k = 0; k < resSize; k++) {
+                neurons[i][j][k]->getAxon()->setDirection();
+                neurons[i][j][k]->getAxon()->growDirection();
+            }
+        }
+    }
     logger (file, "Reservoir Successfully Created.\n");
 }
 

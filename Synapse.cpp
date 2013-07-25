@@ -9,6 +9,8 @@ Synapse::Synapse()
 Synapse::Synapse(Neuron* target, Neuron* origin) {
     this->target = target;
     weight = INITIAL_SYNAPSE_WEIGHT;
+    lifespan = 100;
+    permanent = true;
     next = NULL;
     this->origin = origin;
 
@@ -19,6 +21,8 @@ Synapse::Synapse(Neuron* target, Neuron* origin) {
 Synapse::Synapse(float weight, Neuron* target, Neuron* origin) {
     this->target = target;
     this->weight = weight;
+    lifespan = 3;
+    permanent = false;
     next = NULL;
     this->origin = origin;
 
@@ -26,10 +30,12 @@ Synapse::Synapse(float weight, Neuron* target, Neuron* origin) {
     target->addConnection(origin);
 }
 
-void Synapse::trigger(float value) {
+void Synapse::trigger(float value, bool train) {
     target->acceptSignal(value, origin);
     // Increment weight/lifespan.  Use only when reinforcement of action is required.  Won't need this until the system is autonomous.
     //changeWeight(0.01);
+    if (train)
+        changeLifespan(LIFESPAN_INCREASE);
 }
 
 Neuron* Synapse::getTarget() {
@@ -64,8 +70,21 @@ void Synapse::changeWeight(float value) {
 //    printf ("%lf ", weight);
 }
 
+void Synapse::changeLifespan(float lifespan) {
+    if (permanent)
+        this->lifespan += lifespan;
+}
+
+void Synapse::makePerm() {
+    permanent = true;
+}
+
 float Synapse::getWeight() {
     return weight;
+}
+
+float Synapse::getLifespan() {
+    return lifespan;
 }
 
 Synapse::~Synapse()

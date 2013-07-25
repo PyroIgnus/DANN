@@ -3,11 +3,18 @@
 #include <list>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/time.h>
 
 // Default Constructor
 NeuralNetwork::NeuralNetwork()
 {
-    logger (file, "Creating Neural Network.\n");
+    char buff[200];
+    sprintf(buff, "Creating Neural Network.\nCue initialization seed: %d\nNumber of Reservoirs: %d\nReservoir dimension size: %dx%dx%d\nNumber of max inputs: %d\nMax axon length: %d\nMax number of synapses: %d\n",
+            CUE_SEED, NUM_RESERVOIRS, MAX_RES_SIZE, MAX_RES_SIZE, MAX_RES_SIZE, MAX_INPUTS, MAX_AXON_LENGTH, MAX_SYNAPSES);
+    logger (file, buff);
+    sprintf(buff, "Search Radius: %d\nAction Potential: %d\nThreshold: %d\nAlpha learning rate(cue): %f\nBeta learning rate(weight): %f\nSynapse lifespan increase: %f\nSynapse lifespan decrease: %f\n",
+            SEARCH_RADIUS, ACTION_POTENTIAL, THRESHOLD, CUE_CHANGE, WEIGHT_CHANGE, LIFESPAN_INCREASE, LIFESPAN_DECREASE);
+    logger (file, buff);
     numReservoirs = NUM_RESERVOIRS;
     resDimension = MAX_RES_SIZE;
     numSensors = NUM_SENSORS;
@@ -27,18 +34,22 @@ NeuralNetwork::NeuralNetwork()
     }
     for (int i = 0; i < numMotors; i++) {
         motors[i] = new Neuron(resDimension + 10 + i + i, resDimension + 10 + i + i, resDimension + 10 + i + i);
+        motors[i]->makeOutput(true);
     }
     // Force link sensors and motors to reservoirs.  Unique to the network.
     for (int i = 0; i < numSensors; i++) {
-        linkSensor(sensors[i], reservoir[0]->getNeuron(i, 0, 0));
+        linkSensor(sensors[i], reservoir[0]->getNeuron(i + 1, 0, 0));
     }
+    linkReservoir(reservoir[0]->getNeuron(1, 1, 0), reservoir[1]->getNeuron(0, 1, 1));
+    linkReservoir(reservoir[1]->getNeuron(1, 1, 0), reservoir[1]->getNeuron(1, 1, 2));
     for (int i = 0; i < numMotors; i++) {
-        linkMotor(reservoir[0]->getNeuron(resDimension - 1, resDimension - 1, i), motors[i]);
+        linkMotor(reservoir[1]->getNeuron(resDimension - 1, resDimension - 1, i), motors[i]);
     }
 
     logger (file, "Neural Network Successfully Created.\n");
 }
 
+// Might not use.
 NeuralNetwork::NeuralNetwork(char* filename)
 {
 
@@ -53,9 +64,19 @@ void NeuralNetwork::linkSensor(Neuron* sensor, Neuron* target) {
 void NeuralNetwork::linkMotor(Neuron* target, Neuron* motor) {
     // Link the target Neuron to motor Neuron by means of axon and synapses.
     target->getAxon()->forceLink(motor);
+    target->setCue(1.0);
+}
+
+void NeuralNetwork::linkReservoir(Neuron* source, Neuron* target) {
+    source->getAxon()->forceLink(target);
 }
 
 void NeuralNetwork::trainAND() {
+    // Start timing.
+    struct timeval start_time, end_time;
+	gettimeofday(&start_time,NULL);
+	double t1=start_time.tv_sec+(start_time.tv_usec/1000000.0);
+
     // Method to train.  Probably specific to what the DANN is being trained for.
     std::vector<float> values;
     values.resize(NUM_SENSORS);
@@ -76,7 +97,7 @@ void NeuralNetwork::trainAND() {
                 for (int j = 0; j < 2; j++) {
                     values[1] = j * 100;
                     updateSensors(values);
-                    process();
+                    process(false);
                     if (motors[0]->isTriggered() == (i && j)) {
                         correct += 1;
                         motors[0]->resetTrigger();
@@ -94,9 +115,9 @@ void NeuralNetwork::trainAND() {
             values[0] = (rand() % 2) * 100;
             values[1] = (rand() % 2) * 100;
             updateSensors(values);
-            process();
+            process(true);
             // Use updateCues() to update cues.
-            if (motors[0]->isTriggered() != (values[0] && values[1])) {
+            if (motors[0]->isTriggered() != ((values[0] != 0) && (values[1] != 0))) {
                 updateCues(motors[0], motors[0]->isTriggered());
             }
             else {
@@ -121,10 +142,25 @@ void NeuralNetwork::trainAND() {
 //        printf ("Test? (y/n): ");
 //        fscanf(stdin, "%d", &input);
     }
+
+    gettimeofday(&end_time,NULL);
+    double t2=end_time.tv_sec+(end_time.tv_usec/1000000.0);
+    double totaltime=t2-t1;
+
     printf ("Network successfully learned AND gate behaviour in %d iterations.\n", iterations);
+    if (LOGGING) {
+        char buff[100];
+        sprintf(buff, "Network successfully learned AND gate behaviour in %d iterations and %.6lf seconds.\n", iterations, totaltime);
+        logger(file, buff);
+    }
 }
 
 void NeuralNetwork::trainOR() {
+    // Start timing.
+    struct timeval start_time, end_time;
+	gettimeofday(&start_time,NULL);
+	double t1=start_time.tv_sec+(start_time.tv_usec/1000000.0);
+
     // Method to train.  Probably specific to what the DANN is being trained for.
     std::vector<float> values;
     values.resize(NUM_SENSORS);
@@ -145,7 +181,7 @@ void NeuralNetwork::trainOR() {
                 for (int j = 0; j < 2; j++) {
                     values[1] = j * 100;
                     updateSensors(values);
-                    process();
+                    process(false);
                     if (motors[0]->isTriggered() == (i || j)) {
                         correct += 1;
                         motors[0]->resetTrigger();
@@ -163,7 +199,7 @@ void NeuralNetwork::trainOR() {
             values[0] = (rand() % 2) * 100;
             values[1] = (rand() % 2) * 100;
             updateSensors(values);
-            process();
+            process(true);
             // Use updateCues() to update cues.
             if (motors[0]->isTriggered() != (values[0] || values[1])) {
                 updateCues(motors[0], motors[0]->isTriggered());
@@ -190,7 +226,107 @@ void NeuralNetwork::trainOR() {
 //        printf ("Test? (y/n): ");
 //        fscanf(stdin, "%d", &input);
     }
+
+    gettimeofday(&end_time,NULL);
+    double t2=end_time.tv_sec+(end_time.tv_usec/1000000.0);
+    double totaltime=t2-t1;
+
     printf ("Network successfully learned OR gate behaviour in %d iterations.\n", iterations);
+    if (LOGGING) {
+        char buff[100];
+        sprintf(buff, "Network successfully learned OR gate behaviour in %d iterations and %.6lf seconds.\n", iterations, totaltime);
+        logger(file, buff);
+    }
+}
+
+void NeuralNetwork::trainXOR() {
+    // Start timing.
+    struct timeval start_time, end_time;
+	gettimeofday(&start_time,NULL);
+	double t1=start_time.tv_sec+(start_time.tv_usec/1000000.0);
+
+    // Method to train.  Probably specific to what the DANN is being trained for.
+    std::vector<float> values;
+    values.resize(NUM_SENSORS);
+//    printf ("Test? (y[1]/n[2]): ");
+    int input = 0;
+    int correct = 0;
+    int iterations = 0;
+    srand(0);
+
+//    fscanf (stdin, "%d", &input);
+    while (true) {
+        //usleep(999999);
+
+//        if (input == 1) {
+            // Test all combinations of 0 and 1 to see if the correct output is made.
+            for (int i = 0; i < 2; i++) {
+                values[0] = i * 100;
+                for (int j = 0; j < 2; j++) {
+                    values[1] = j * 100;
+                    updateSensors(values);
+                    process(false);
+                    if (motors[0]->isTriggered() == (i ^ j)) {
+                        correct += 1;
+                        motors[0]->resetTrigger();
+                    }
+                }
+            }
+            printf ("The DANN obtained a score of %d out of 4.\n", correct);
+            if (correct == 4) {
+                break;
+            }
+            correct = 0;
+//        }
+//        else if (input == 2) {
+            // Run through a random combination to train.
+            values[0] = (rand() % 2) * 100;
+            values[1] = (rand() % 2) * 100;
+            updateSensors(values);
+            process(true);
+            // Use updateCues() to update cues.
+            int i = 0;
+            int j = 0;
+            if (values[0] > 0)
+                i = 1;
+            if (values[1] > 0)
+                j = 1;
+            if (motors[0]->isTriggered() != (i ^ j)) {
+                updateCues(motors[0], motors[0]->isTriggered());
+            }
+            else {
+                //updateCues(motors[0], false);
+            }
+            // Show input-output relation.
+            if (values[0]) {
+                printf ("Input 0 is on.\n");
+            }
+            else {
+                printf ("Input 0 is off.\n");
+            }
+            if (values[1]) {
+                printf("Input 1 is on.\n");
+            }
+            else {
+                printf ("Input 1 is off.\n");
+            }
+            outputMotors();
+            iterations += 1;
+//        }
+//        printf ("Test? (y/n): ");
+//        fscanf(stdin, "%d", &input);
+    }
+
+    gettimeofday(&end_time,NULL);
+    double t2=end_time.tv_sec+(end_time.tv_usec/1000000.0);
+    double totaltime=t2-t1;
+
+    printf ("Network successfully learned XOR gate behaviour in %d iterations.\n", iterations);
+    if (LOGGING) {
+        char buff[100];
+        sprintf(buff, "Network successfully learned XOR gate behaviour in %d iterations and %.6lf seconds.\n", iterations, totaltime);
+        logger(file, buff);
+    }
 }
 
 void NeuralNetwork::updateSensors(std::vector<float> values) {
@@ -200,7 +336,7 @@ void NeuralNetwork::updateSensors(std::vector<float> values) {
     }
 }
 
-void NeuralNetwork::process() {
+void NeuralNetwork::process(bool train) {
     // Commence a breadth first signal pass starting from the sensor Neurons.
     std::list<Neuron*> unprocessed;
     std::list<Neuron*> processed;
@@ -218,17 +354,17 @@ void NeuralNetwork::process() {
 
         // Process the next Neuron.
         current = unprocessed.front();
-        head = current->getAxon()->getSynapseHead();
-        curr = head;
+//        printf ("%d ", current->getAxon()->getNumSynapses());
 //        current->printPosition();
-//        printf ("%d\n", current->getAxon()->getNumSynapses());
+        curr = current->getAxon()->getSynapseHead();
+        int numSynapses = current->getAxon()->getNumSynapses();
         // Send an action potential if necessary.
         if (current->activatePotential(current->process())) {
             // Add new Neurons to the queue if necessary
-            for (int i = 0; i < current->getAxon()->getNumSynapses(); i++) {
+            for (int i = 0; i < numSynapses; i++) {
                 isUnique = true;
                 check = curr->getTarget();
-                curr->trigger(ACTION_POTENTIAL);
+                curr->trigger(ACTION_POTENTIAL * curr->getWeight(), train);
                 // Check for duplicates before pushing new Neurons into the queue.
                 for (std::list<Neuron*>::iterator it = processed.begin(); it != processed.end(); ++it) {
                     if ((*it)->equals(check)) {
@@ -255,6 +391,18 @@ void NeuralNetwork::process() {
         unprocessed.pop_front();
 
     }
+
+// Used to empty all dendrites.  Most likely won't use.
+//    for (int res = 0; res < numReservoirs; res++) {
+//        for (int i = 0; i < resDimension; i++) {
+//            for (int j = 0; j < resDimension; j++) {
+//                for (int k = 0; k < resDimension; k++) {
+//                    current = reservoir[res]->getNeuron(i, j, k);
+//                    current->resetDendrites();
+//                }
+//            }
+//        }
+//    }
 }
 
 void NeuralNetwork::updateCues(Neuron* motor, bool reinforce) {
@@ -265,7 +413,7 @@ void NeuralNetwork::updateCues(Neuron* motor, bool reinforce) {
     Neuron* current;
     Neuron* check;
     bool isUnique;
-    bool state = motors[0]->isTriggered();
+    bool state = motor->isTriggered();
     int counter = 0;
     float change = CUE_CHANGE;
     if (reinforce) {
@@ -273,7 +421,7 @@ void NeuralNetwork::updateCues(Neuron* motor, bool reinforce) {
     }
 
     unprocessed.push_back(motor);
-    for (int i = 0; i < numMotors; i++) {
+    for (int i = 0; i < numSensors; i++) {
         processed.push_back(sensors[i]);
     }
 
@@ -281,6 +429,8 @@ void NeuralNetwork::updateCues(Neuron* motor, bool reinforce) {
 
         // Process the next Neuron.
         current = unprocessed.front();
+//        current->printPosition();
+//        printf ("%f\n", current->getCue());
         // Add new Neurons to the queue if necessary
         for (int i = 0; i < current->getConnSize(); i++) {
             isUnique = true;
@@ -303,7 +453,7 @@ void NeuralNetwork::updateCues(Neuron* motor, bool reinforce) {
             }
         }
         // Update cues if necessary.
-        if (counter >= numMotors) {
+        if (!current->isOutput()) {
             current->changeCue(change);
         }
         counter += 1;
@@ -313,7 +463,6 @@ void NeuralNetwork::updateCues(Neuron* motor, bool reinforce) {
 
     }
 
-    Synapse* head;
     Synapse* curr;
     // Update weights based on the targets' cue values and reset triggers.
     for (int res = 0; res < numReservoirs; res++) {
@@ -322,18 +471,18 @@ void NeuralNetwork::updateCues(Neuron* motor, bool reinforce) {
                 for (int k = 0; k < resDimension; k++) {
                     current = reservoir[res]->getNeuron(i, j, k);
                     current->resetTrigger();
-//                    current->resetDendrites();
-                    // Grow axon if necessary.
-                    current->getAxon()->setDirection();
-                    current->getAxon()->growDirection();
-                    head = current->getAxon()->getSynapseHead();
-                    curr = head;
-                    for (int i = 0; i < current->getAxon()->getNumSynapses(); i++) {
+                    curr = current->getAxon()->getSynapseHead();
+                    int numSyn = current->getAxon()->getNumSynapses();
+                    for (int s = 0; s < numSyn; s++) {
                         curr->changeWeight(WEIGHT_CHANGE * curr->getTarget()->getCue());   // Some function of the target cue.
-                        if (curr->getWeight() <= 0) {
+                        if (!(curr->getTarget()->isOutput())) {
+                            curr->changeLifespan(-1 * LIFESPAN_DECREASE);
+                        }
+                        if (curr->getLifespan() <= 0) {
                             Synapse* temp = curr->getNext();
                             current->getAxon()->removeSynapse(curr);
                             curr = temp;
+                            s += 1;
                         }
                         else {
                             curr = curr->getNext();

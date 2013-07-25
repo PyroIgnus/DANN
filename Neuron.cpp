@@ -4,10 +4,11 @@
 
 Neuron::Neuron()
 {
-    logger (file, "Neuron Created.\n");
+//    logger (file, "Neuron Created.\n");
     position[0] = -10;
     position[1] = -10;
     position[2] = -10;
+    output = false;
     alive = true;
     triggered = false;
     cue = 0;
@@ -28,13 +29,14 @@ Neuron::Neuron()
 
 Neuron::Neuron(int x, int y, int z) {
 
-    logger (file, "Neuron Created.\n");
+//    logger (file, "Neuron Created.\n");
     position[0] = x;
     position[1] = y;
     position[2] = z;
+    output = false;
     alive = true;
     triggered = false;
-    cue = (x + y + z) % 2;  // "Random" cue value for unspecified cues.
+    cue = 0;    //(x + y + z) % 2;  // "Random" cue value for unspecified cues.
     for (int i = 0; i < MAX_INPUTS; i++) {
         dendrites[i] = 0;
     }
@@ -52,10 +54,11 @@ Neuron::Neuron(int x, int y, int z) {
 
 Neuron::Neuron(int x, int y, int z, float cue, Reservoir* res) {
 
-    logger (file, "Neuron Created.\n");
+//    logger (file, "Neuron Created.\n");
     position[0] = x;
     position[1] = y;
     position[2] = z;
+    output = false;
     alive = true;
     triggered = false;
     this->cue = cue;
@@ -146,11 +149,19 @@ void Neuron::changeCue(float value) {
     }
 }
 
+void Neuron::setCue(float value) {
+    cue = value;
+}
+
 bool Neuron::equals(Neuron* other) {
     if (other == this){
         return true;
     }
     return false;
+}
+
+void Neuron::makeOutput(bool value) {
+    output = value;
 }
 
 void Neuron::resetTrigger() {
@@ -189,6 +200,14 @@ float Neuron::getCue() {
     return cue;
 }
 
+bool Neuron::isAlive() {
+    return alive;
+}
+
+bool Neuron::isOutput() {
+    return output;
+}
+
 bool Neuron::isTriggered() {
     return triggered;
 }
@@ -200,5 +219,5 @@ void Neuron::printPosition() {
 Neuron::~Neuron()
 {
     //delete axon;
-    logger (file, "Neuron Destroyed.\n");
+//    logger (file, "Neuron Destroyed.\n");
 }

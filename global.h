@@ -5,4 +5,21 @@
 
 extern FILE *file;
 
+extern int CUE_SEED;
+extern int MAX_AXON_LENGTH;
+extern int MAX_SYNAPSES;
+extern int MAX_WEIGHT;
+extern int MAX_CUE;
+extern int SEARCH_RADIUS;
+
+extern int ACTION_POTENTIAL;
+extern int THRESHOLD;
+extern int RECOVERY_PERIOD;
+extern int RECOVERY_THRESHOLD;
+extern int INITIAL_SYNAPSE_WEIGHT;
+extern float CUE_CHANGE;
+extern float WEIGHT_CHANGE;
+extern float LIFESPAN_INCREASE;
+extern float LIFESPAN_DECREASE;
+
 #endif // GLOBAL_H

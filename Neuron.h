@@ -24,7 +24,9 @@ class Neuron
         float process();
         bool activatePotential(float value);
         void changeCue(float value);
+        void setCue(float value);
         bool equals (Neuron* other);
+        void makeOutput(bool value);
         void resetTrigger();
         void resetDendrites();
         int getX();
@@ -34,6 +36,8 @@ class Neuron
         Neuron* getConnection(int index);
         int getConnSize();
         float getCue();
+        bool isAlive();
+        bool isOutput();
         bool isTriggered();
         inline Reservoir* getRes() {
             return res;
@@ -53,6 +57,7 @@ class Neuron
          * @brief Describes the attractive/repulsive cue this neuron possesses.
          */
         float cue;
+        bool output;
         bool alive;
         bool triggered; // Used for checking Motor Neurons.
         int position[3];
