@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
 			"> 1) Train OR gate behaviour\n"
 			"> 2) Train AND gate behaviour\n"
 			"> 3) Train XOR gate behaviour\n"
-			"> 4) Empty\n"
+			"> 4) Train MNIST\n"
 			"> 5) Empty\n"
 			"> 6) Exit\n"
 			"> 7) Load settings and create neural network\n"
@@ -69,8 +69,7 @@ int main(int argc, char *argv[]) {
                 }
                 break;
             case 4:
-
-
+                net->trainMNIST(60000, 10000);
                 break;
             case 5:
 
@@ -108,7 +107,7 @@ int main(int argc, char *argv[]) {
                         "> 1) Train OR gate behaviour\n"
                         "> 2) Train AND gate behaviour\n"
                         "> 3) Train XOR gate behaviour\n"
-                        "> 4) Empty\n"
+                        "> 4) Train MNIST\n"
                         "> 5) Empty\n"
                         "> 6) Exit\n"
                         "> 7) Load settings and create neural network\n"

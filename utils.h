@@ -3,11 +3,16 @@
 
 #include <stdio.h>
 
-#define NUM_RESERVOIRS 2
+#define MNIST_TRAIN_IMAGES "/MNIST/Itraining.txt"
+#define MNIST_TRAIN_LABELS "/MNIST/labeltraining.txt"
+#define MNIST_TEST_IMAGES "/MNIST/Itest.txt"
+#define MNIST_TEST_LABELS "/MNIST/labeltest.txt"
+
+#define NUM_RESERVOIRS 1
 //#define CUE_SEED 0
-#define MAX_RES_SIZE 4
-#define NUM_SENSORS 2
-#define NUM_MOTORS 1
+#define MAX_RES_SIZE 28
+#define NUM_SENSORS 784
+#define NUM_MOTORS 10
 #define MAX_INPUTS 1000
 //#define MAX_AXON_LENGTH 2
 //#define MAX_SYNAPSES 10000
@@ -30,6 +35,6 @@ static const char CONFIG_COMMENT_CHAR = '#';
 void logger(FILE *file, char *message);
 int read_config(char *config_file);
 int process_config_line(char *line);
-void readMNIST(char* image_file, FILE* label_file, int num, int*** images, int* labels);
+void readMNIST(char* image_file, char* label_file, int num, int*** images, int* labels);
 
 #endif
