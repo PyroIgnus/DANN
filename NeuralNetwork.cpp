@@ -355,25 +355,35 @@ void NeuralNetwork::trainMNIST(int numTrain, int numTest) {
         }
     }
     int* testLabels = new int [numTest];
-    readMNIST(MNIST_TRAIN_IMAGES, MNIST_TRAIN_LABELS, 60000, trainValues, trainLabels);
-    readMNIST(MNIST_TEST_IMAGES, MNIST_TEST_LABELS, 10000, testValues, testLabels);
+    if (readMNIST(MNIST_TRAIN_IMAGES, MNIST_TRAIN_LABELS, 60000, trainValues, trainLabels) == -1)
+        return;
+    if (readMNIST(MNIST_TEST_IMAGES, MNIST_TEST_LABELS, 10000, testValues, testLabels) == -1)
+        return;
 
     // Method to train MNIST data.
     for (int i = 0; i < numTrain; i++) {
+        if (i % (numTrain/8) == 0 && (i != 0)) {
+            printf ("Completed another 12.5%% of training.\n");
+        }
         updateSensorsMNIST(trainValues[i]);
         process(true);
         for (int j = 0; j < numMotors; j++) {
             if (motors[j]->isTriggered() && (j != trainLabels[i]) || (!motors[j]->isTriggered() && (j == trainLabels[i]))) {
                 updateCues(motors[j], motors[j]->isTriggered());
             }
+            motors[j]->resetTrigger();
         }
     }
+    printf ("Training Complete.\n");
 
     // Method to test MNIST data.
     bool wrong = false;
     int correct = 0;
     int partially = 0;
     for (int i = 0; i < numTest; i++) {
+        if (i % (numTest/8) == 0 && (i != 0)) {
+            printf ("Completed another 12.5%% of testing.\n");
+        }
         updateSensorsMNIST(testValues[i]);
         process(false);
         for (int j = 0; j < numMotors; j++) {
@@ -392,6 +402,7 @@ void NeuralNetwork::trainMNIST(int numTrain, int numTest) {
                 }
             }
             wrong = false;
+            motors[j]->resetTrigger();
         }
     }
 
@@ -399,7 +410,7 @@ void NeuralNetwork::trainMNIST(int numTrain, int numTest) {
     double t2=end_time.tv_sec+(end_time.tv_usec/1000000.0);
     double totaltime=t2-t1;
 
-    printf ("Network successfully completed MNIST training and testing.\nCorrect: %d\nPartially correct: %d\n", correct, partially);
+    printf ("Network successfully completed MNIST training and testing in %.6lf seconds.\nCorrect: %d\nPartially correct: %d\n", totaltime, correct, partially);
     if (LOGGING) {
         char buff[100];
         sprintf(buff, "Network successfully completed MNIST training and testing in %.6lf seconds with %d correct and %d partially correct.\n", totaltime, correct, partially);
@@ -611,6 +622,12 @@ void NeuralNetwork::outputMotors() {
             printf ("Motor %d is off.\n", i);
         }
         motors[i]->resetDendrites();
+    }
+}
+
+void NeuralNetwork::resetMotorTriggers() {
+    for (int i = 0; i < numMotors; i++) {
+        motors[i]->resetTrigger();
     }
 }
 
