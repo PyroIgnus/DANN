@@ -1,0 +1,11 @@
+data/*
+MNIST/*
+*.depend
+*.orig
+*.o
+obj/*
+bin/*
+utils.cpp.*
+*.layout
+*.cbp
+
