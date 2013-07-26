@@ -30,7 +30,11 @@ int main(int argc, char *argv[]) {
 			"> 1) Train OR gate behaviour\n"
 			"> 2) Train AND gate behaviour\n"
 			"> 3) Train XOR gate behaviour\n"
+<<<<<<< HEAD
 			"> 4) Load MNIST hand-written images\n"
+=======
+			"> 4) Train MNIST\n"
+>>>>>>> 873ad5475208aeab78dd6262cd3248ca547d0845
 			"> 5) Empty\n"
 			"> 6) Exit\n"
 			"> 7) Load settings and create neural network\n"
@@ -68,6 +72,7 @@ int main(int argc, char *argv[]) {
                     net->trainXOR();
                 }
                 break;
+<<<<<<< HEAD
             case 4:
                 int labels[MNIST_LENGTH];
                 //int images[MNIST_LENGTH+1][MNIST_IMAGE_DIM+1][MNIST_IMAGE_DIM+1];
@@ -81,6 +86,10 @@ int main(int argc, char *argv[]) {
                 }
                 printf("Arrays initialized\n");
                 readMNIST("MNIST/Itraining.txt", "MNIST/labeltraining.txt", images, labels);
+=======
+            case 4:
+                net->trainMNIST(60000, 10000);
+>>>>>>> 873ad5475208aeab78dd6262cd3248ca547d0845
                 break;
             case 5:
 
@@ -118,7 +127,7 @@ int main(int argc, char *argv[]) {
                         "> 1) Train OR gate behaviour\n"
                         "> 2) Train AND gate behaviour\n"
                         "> 3) Train XOR gate behaviour\n"
-                        "> 4) Empty\n"
+                        "> 4) Train MNIST\n"
                         "> 5) Empty\n"
                         "> 6) Exit\n"
                         "> 7) Load settings and create neural network\n"

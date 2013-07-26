@@ -37,13 +37,17 @@ NeuralNetwork::NeuralNetwork()
         motors[i]->makeOutput(true);
     }
     // Force link sensors and motors to reservoirs.  Unique to the network.
-    for (int i = 0; i < numSensors; i++) {
-        linkSensor(sensors[i], reservoir[0]->getNeuron(i + 1, 0, 0));
+    int sensorCount = 0;
+    for (int i = 0; i < 28; i++) {
+        for (int j = 0; j < 28; j++) {
+            linkSensor(sensors[sensorCount], reservoir[0]->getNeuron(0, i, j));
+            sensorCount += 1;
+        }
     }
-    linkReservoir(reservoir[0]->getNeuron(1, 1, 0), reservoir[1]->getNeuron(0, 1, 1));
-    linkReservoir(reservoir[1]->getNeuron(1, 1, 0), reservoir[1]->getNeuron(1, 1, 2));
+//    linkReservoir(reservoir[0]->getNeuron(1, 1, 0), reservoir[1]->getNeuron(0, 1, 1));
+//    linkReservoir(reservoir[1]->getNeuron(1, 1, 0), reservoir[1]->getNeuron(1, 1, 2));
     for (int i = 0; i < numMotors; i++) {
-        linkMotor(reservoir[1]->getNeuron(resDimension - 1, resDimension - 1, i), motors[i]);
+        linkMotor(reservoir[0]->getNeuron(resDimension - 1, resDimension/2, i + i), motors[i]);
     }
 
     logger (file, "Neural Network Successfully Created.\n");
@@ -329,10 +333,108 @@ void NeuralNetwork::trainXOR() {
     }
 }
 
+void NeuralNetwork::trainMNIST(int numTrain, int numTest) {
+    // Start timing.
+    struct timeval start_time, end_time;
+	gettimeofday(&start_time,NULL);
+	double t1=start_time.tv_sec+(start_time.tv_usec/1000000.0);
+
+    int*** trainValues = new int** [numTrain];
+    for (int i = 0; i < numTrain; i++) {
+        trainValues[i] = new int* [28];
+        for (int j = 0; j < 28; j++) {
+            trainValues[i][j] = new int [28];
+        }
+    }
+    int* trainLabels = new int [numTrain];
+    int*** testValues = new int** [numTest];
+    for (int i = 0; i < numTest; i++) {
+        testValues[i] = new int* [28];
+        for (int j = 0; j < 28; j++) {
+            testValues[i][j] = new int [28];
+        }
+    }
+    int* testLabels = new int [numTest];
+    readMNIST(MNIST_TRAIN_IMAGES, MNIST_TRAIN_LABELS, 60000, trainValues, trainLabels);
+    readMNIST(MNIST_TEST_IMAGES, MNIST_TEST_LABELS, 10000, testValues, testLabels);
+
+    // Method to train MNIST data.
+    for (int i = 0; i < numTrain; i++) {
+        updateSensorsMNIST(trainValues[i]);
+        process(true);
+        for (int j = 0; j < numMotors; j++) {
+            if (motors[j]->isTriggered() && (j != trainLabels[i]) || (!motors[j]->isTriggered() && (j == trainLabels[i]))) {
+                updateCues(motors[j], motors[j]->isTriggered());
+            }
+        }
+    }
+
+    // Method to test MNIST data.
+    bool wrong = false;
+    int correct = 0;
+    int partially = 0;
+    for (int i = 0; i < numTest; i++) {
+        updateSensorsMNIST(testValues[i]);
+        process(false);
+        for (int j = 0; j < numMotors; j++) {
+            if (!motors[j]->isTriggered() && (j == trainLabels[i])) {
+                j = numMotors;
+            }
+            if (motors[j]->isTriggered() && (j != trainLabels[i])) {
+                wrong = true;
+            }
+            if (motors[j]->isTriggered() && (j == testLabels[i])) {
+                if (wrong) {
+                    partially += 1;
+                }
+                else {
+                    correct += 1;
+                }
+            }
+            wrong = false;
+        }
+    }
+
+    gettimeofday(&end_time,NULL);
+    double t2=end_time.tv_sec+(end_time.tv_usec/1000000.0);
+    double totaltime=t2-t1;
+
+    printf ("Network successfully completed MNIST training and testing.\nCorrect: %d\nPartially correct: %d\n", correct, partially);
+    if (LOGGING) {
+        char buff[100];
+        sprintf(buff, "Network successfully completed MNIST training and testing in %.6lf seconds with %d correct and %d partially correct.\n", totaltime, correct, partially);
+        logger(file, buff);
+    }
+
+    for (int i = 0; i < numTrain; i++) {
+        for (int j = 0; j < 28; j++) {
+            delete[] trainValues[i][j];
+        }
+        delete[] trainValues[i];
+    }
+    delete[] trainValues;
+    delete[] trainLabels;
+    for (int i = 0; i < numTest; i++) {
+        for (int j = 0; j < 28; j++) {
+            delete[] testValues[i][j];
+        }
+        delete[] testValues[i];
+    }
+    delete[] testLabels;
+}
+
 void NeuralNetwork::updateSensors(std::vector<float> values) {
     // Update sensor Neuron dendrite values.  Specific to each Sensor.
     for (int i = 0; i < values.size(); i++) {
         sensors[i]->acceptSignal(values[i], NULL);
+    }
+}
+
+void NeuralNetwork::updateSensorsMNIST(int** values) {
+    for (int i = 0; i < 28; i++) {
+        for (int j = 0; j < 28; j++) {
+            sensors[i + j]->acceptSignal(values[i][j], NULL);
+        }
     }
 }
 

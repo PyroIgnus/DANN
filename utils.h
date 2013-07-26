@@ -3,8 +3,14 @@
 
 #include <stdio.h>
 
-#define NUM_RESERVOIRS 2
+#define MNIST_TRAIN_IMAGES "/MNIST/Itraining.txt"
+#define MNIST_TRAIN_LABELS "/MNIST/labeltraining.txt"
+#define MNIST_TEST_IMAGES "/MNIST/Itest.txt"
+#define MNIST_TEST_LABELS "/MNIST/labeltest.txt"
+
+#define NUM_RESERVOIRS 1
 //#define CUE_SEED 0
+<<<<<<< HEAD
 #define MAX_RES_SIZE 4
 #define NUM_SENSORS 2
 #define NUM_MOTORS 1
@@ -13,6 +19,12 @@
 #define MNIST_LENGTH 60000
 #define MNIST_IMAGE_DIM 28
 #define MNIST_PROGRESS_IND 5000
+=======
+#define MAX_RES_SIZE 28
+#define NUM_SENSORS 784
+#define NUM_MOTORS 10
+#define MAX_INPUTS 1000
+>>>>>>> 873ad5475208aeab78dd6262cd3248ca547d0845
 //#define MAX_AXON_LENGTH 2
 //#define MAX_SYNAPSES 10000
 //#define MAX_WEIGHT 1
@@ -34,7 +46,11 @@ static const char CONFIG_COMMENT_CHAR = '#';
 void logger(FILE *file, char *message);
 int read_config(char *config_file);
 int process_config_line(char *line);
+<<<<<<< HEAD
 void readMNIST(char* image_filename, char* label_filename, int*** images, int* labels);
 void printMNIST(int imageIndex);
+=======
+void readMNIST(char* image_file, char* label_file, int num, int*** images, int* labels);
+>>>>>>> 873ad5475208aeab78dd6262cd3248ca547d0845
 
 #endif
