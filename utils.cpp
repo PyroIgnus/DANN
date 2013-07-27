@@ -104,7 +104,8 @@ int read_config(char *config_file)
 }
 
 int readMNIST(char* image_filename, char* label_filename, int num, int*** images, int* labels) {
-    char buff[60001];
+    char buffimg[150];
+    char buff[num + 1];
     int imageNum = 0;
     int line = 0;
     // Load labels from file.
@@ -113,11 +114,10 @@ int readMNIST(char* image_filename, char* label_filename, int num, int*** images
         printf ("Error opening file: %s\n", label_filename);
         return -1;
     }
-    while (fgets(buff, 60000, label_file) != NULL) {
-        for (int i = 0; i < strlen(buff); i++) {
-            char temp = buff[i];
-            labels[i] = temp - '0';
-        }
+    fgets(buff, num + 1, label_file);
+    for (int i = 0; i < strlen(buff); i++) {
+        char temp = buff[i];
+        labels[i] = temp - '0';
     }
     printf("Labels finished loading.\n");
     // Load image data from file.
@@ -128,13 +128,13 @@ int readMNIST(char* image_filename, char* label_filename, int num, int*** images
         printf ("Error opening file: %s\n", image_filename);
         return -1;
     }
-    while (fgets(buff, 150, image_file) != NULL) {
-        if (strcmp(buff, "\n") == 0) {
+    while ((fgets(buffimg, 150, image_file) != NULL) && (imageNum < num)) {
+        if (strcmp(buffimg, "\n") == 0) {
             line = 0;
             imageNum += 1;
         }
         else {
-            images[imageNum][line][0] = atoi(strtok(buff, "\t"));
+            images[imageNum][line][0] = atoi(strtok(buffimg, "\t"));
             for (int i = 1; i < 28; i++) {
     //            sscanf(buff, "%d\t", &images[imageNum][line][i]);
                 images[imageNum][line][i] = atoi(strtok(NULL, "\t"));

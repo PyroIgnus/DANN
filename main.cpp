@@ -69,7 +69,12 @@ int main(int argc, char *argv[]) {
                 }
                 break;
             case 4:
-                net->trainMNIST(60000, 10000);
+                if (net == NULL) {
+                    printf ("You do not have an active Neural Network running.\n");
+                }
+                else {
+                    net->trainMNIST(6000, 1000);
+                }
                 break;
             case 5:
 

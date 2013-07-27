@@ -26,6 +26,7 @@ NeuralNetwork::NeuralNetwork()
     criticalPeriod = false;
     sensitivityPeriod = false;
 
+    // Create Neurons.
     for (int i = 0; i < numSensors; i++) {
         sensors[i] = new Neuron(-10 - i - i, -10 - i - i, -10 - i - i);
     }
@@ -36,18 +37,27 @@ NeuralNetwork::NeuralNetwork()
         motors[i] = new Neuron(resDimension + 10 + i + i, resDimension + 10 + i + i, resDimension + 10 + i + i);
         motors[i]->makeOutput(true);
     }
-    // Force link sensors and motors to reservoirs.  Unique to the network.
+    // Force link sensors and motors and reservoirs.  Unique to the network.
     int sensorCount = 0;
-    for (int i = 0; i < 28; i++) {
-        for (int j = 0; j < 28; j++) {
-            linkSensor(sensors[sensorCount], reservoir[0]->getNeuron(0, i, j));
-            sensorCount += 1;
+    for (int i = 0; i < 16; i++) {
+        for (int j = 0; j < 7; j++) {
+            for (int k = 0; k < 7; k++) {
+                linkSensor(sensors[sensorCount], reservoir[i]->getNeuron(0, j, k));
+                sensorCount += 1;
+            }
         }
+    }
+    int counter = 0;
+    for (int i = 0; i < 16; i++) {
+        linkReservoir(reservoir[i]->getNeuron(6, 3, 3), reservoir[16]->getNeuron(0, 3 + (i > 6) + (i > 11), counter % 7));
+        counter += 1;
     }
 //    linkReservoir(reservoir[0]->getNeuron(1, 1, 0), reservoir[1]->getNeuron(0, 1, 1));
 //    linkReservoir(reservoir[1]->getNeuron(1, 1, 0), reservoir[1]->getNeuron(1, 1, 2));
+    counter = 0;
     for (int i = 0; i < numMotors; i++) {
-        linkMotor(reservoir[0]->getNeuron(resDimension - 1, resDimension/2, i + i), motors[i]);
+        linkMotor(reservoir[16]->getNeuron(resDimension - 1, 3 + (i > 6), counter % 7), motors[i]);
+        counter += 1;
     }
 
     logger (file, "Neural Network Successfully Created.\n");
@@ -355,9 +365,9 @@ void NeuralNetwork::trainMNIST(int numTrain, int numTest) {
         }
     }
     int* testLabels = new int [numTest];
-    if (readMNIST(MNIST_TRAIN_IMAGES, MNIST_TRAIN_LABELS, 60000, trainValues, trainLabels) == -1)
+    if (readMNIST(MNIST_TRAIN_IMAGES, MNIST_TRAIN_LABELS, numTrain, trainValues, trainLabels) == -1)
         return;
-    if (readMNIST(MNIST_TEST_IMAGES, MNIST_TEST_LABELS, 10000, testValues, testLabels) == -1)
+    if (readMNIST(MNIST_TEST_IMAGES, MNIST_TEST_LABELS, numTest, testValues, testLabels) == -1)
         return;
 
     // Method to train MNIST data.
@@ -368,6 +378,9 @@ void NeuralNetwork::trainMNIST(int numTrain, int numTest) {
         updateSensorsMNIST(trainValues[i]);
         process(true);
         for (int j = 0; j < numMotors; j++) {
+//            if (motors[j]->isTriggered()) {
+//                printf ("Motor %d turned on.\n", j);
+//            }
             if (motors[j]->isTriggered() && (j != trainLabels[i]) || (!motors[j]->isTriggered() && (j == trainLabels[i]))) {
                 updateCues(motors[j], motors[j]->isTriggered());
             }
@@ -377,40 +390,63 @@ void NeuralNetwork::trainMNIST(int numTrain, int numTest) {
     printf ("Training Complete.\n");
 
     // Method to test MNIST data.
-    bool wrong = false;
+    bool right = false;
+    int wrong = 0;
     int correct = 0;
-    int partially = 0;
+    int partially[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
     for (int i = 0; i < numTest; i++) {
         if (i % (numTest/8) == 0 && (i != 0)) {
             printf ("Completed another 12.5%% of testing.\n");
         }
         updateSensorsMNIST(testValues[i]);
         process(false);
+        if (motors[testLabels[i]]->isTriggered()) {
+            right = true;
+        }
+        if (i % 100 == 0) {
+            printf("0 1 2 3 4 5 6 7 8 9\n");
+        }
         for (int j = 0; j < numMotors; j++) {
-            if (!motors[j]->isTriggered() && (j == trainLabels[i])) {
+            if (i % 100 == 0) {
+                if (motors[j]->isTriggered())
+                    printf ("* ");
+                else {
+                    printf("  ");
+                }
+            }
+            if (!motors[j]->isTriggered() && (j == testLabels[i])) {
+                motors[j]->resetTrigger();
                 j = numMotors;
             }
-            if (motors[j]->isTriggered() && (j != trainLabels[i])) {
-                wrong = true;
-            }
-            if (motors[j]->isTriggered() && (j == testLabels[i])) {
-                if (wrong) {
-                    partially += 1;
+            else {
+                if (motors[j]->isTriggered() && (j != testLabels[i])) {
+                    wrong += 1;
                 }
-                else {
-                    correct += 1;
-                }
+                motors[j]->resetTrigger();
             }
-            wrong = false;
-            motors[j]->resetTrigger();
         }
+        if (right) {
+            if (wrong > 0) {
+                partially[wrong - 1] += 1;
+            }
+            else {
+                correct += 1;
+            }
+            right = false;
+        }
+        printf ("\n");
+        wrong = 0;
     }
 
     gettimeofday(&end_time,NULL);
     double t2=end_time.tv_sec+(end_time.tv_usec/1000000.0);
     double totaltime=t2-t1;
 
-    printf ("Network successfully completed MNIST training and testing in %.6lf seconds.\nCorrect: %d\nPartially correct: %d\n", totaltime, correct, partially);
+    printf ("Network successfully completed MNIST training and testing in %.6lf seconds.\n", totaltime);
+    printf ("Correct: %d\n", correct);
+    for (int i = 0; i < 9; i++) {
+        printf ("Partially correct (%d wrong): %d\n", i + 1, partially[i]);
+    }
     if (LOGGING) {
         char buff[100];
         sprintf(buff, "Network successfully completed MNIST training and testing in %.6lf seconds with %d correct and %d partially correct.\n", totaltime, correct, partially);
@@ -444,7 +480,7 @@ void NeuralNetwork::updateSensors(std::vector<float> values) {
 void NeuralNetwork::updateSensorsMNIST(int** values) {
     for (int i = 0; i < 28; i++) {
         for (int j = 0; j < 28; j++) {
-            sensors[i + j]->acceptSignal(values[i][j], NULL);
+            sensors[(28 * i) + j]->acceptSignal(values[i][j], NULL);
         }
     }
 }
@@ -463,10 +499,13 @@ void NeuralNetwork::process(bool train) {
         unprocessed.push_back(sensors[i]);
     }
 
+//    int counter = 0;
+
     while (!unprocessed.empty()) {
 
         // Process the next Neuron.
         current = unprocessed.front();
+//        counter += 1;
 //        printf ("%d ", current->getAxon()->getNumSynapses());
 //        current->printPosition();
         curr = current->getAxon()->getSynapseHead();
@@ -504,6 +543,8 @@ void NeuralNetwork::process(bool train) {
         unprocessed.pop_front();
 
     }
+
+//    printf ("%d neurons processed.\n", counter);
 
 // Used to empty all dendrites.  Most likely won't use.
 //    for (int res = 0; res < numReservoirs; res++) {
@@ -555,10 +596,12 @@ void NeuralNetwork::updateCues(Neuron* motor, bool reinforce) {
                     break;
                 }
             }
-            for (std::list<Neuron*>::iterator it = unprocessed.begin(); it != unprocessed.end(); it++) {
-                if ((*it)->equals(check)) {
-                    isUnique = false;
-                    break;
+            if (isUnique) {
+                for (std::list<Neuron*>::iterator it = unprocessed.begin(); it != unprocessed.end(); it++) {
+                    if ((*it)->equals(check)) {
+                        isUnique = false;
+                        break;
+                    }
                 }
             }
             if (isUnique && (check->isTriggered() == state)) {
