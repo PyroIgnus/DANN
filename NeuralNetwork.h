@@ -33,6 +33,7 @@ class NeuralNetwork
         void updateCues(Neuron* motor, bool reinforce); // If reinforce is true, cues will be decreased.
         void determineState();  // This is to make the net learn "autonomously".
         void outputMotors();
+        void resetMotorTriggers();
 
         /** Default destructor */
         virtual ~NeuralNetwork();

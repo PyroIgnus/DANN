@@ -1,0 +1,25 @@
+Creating Neural Network.
+Cue initialization seed: 0
+Number of Reservoirs: 1
+Reservoir dimension size: 4x4x4
+Number of max inputs: 1000
+Max axon length: 2
+Max number of synapses: 10000
+Search Radius: 1
+Action Potential: 25
+Threshold: 15
+Alpha learning rate(cue): 0.125000
+Beta learning rate(weight): 0.125000
+Creating Reservoir.
+Reservoir Successfully Created.
+Neural Network Successfully Created.
+Network successfully learned AND gate behaviour in 4 iterations and 0.009000 seconds.
+Network successfully learned AND gate behaviour in 334 iterations and 0.725041 seconds.
+Network successfully learned AND gate behaviour in 92 iterations and 0.169010 seconds.
+Network successfully learned AND gate behaviour in 193 iterations and 0.374021 seconds.
+Network successfully learned AND gate behaviour in 545 iterations and 1.052061 seconds.
+Network successfully learned AND gate behaviour in 194 iterations and 0.372022 seconds.
+Network successfully learned AND gate behaviour in 194 iterations and 0.375021 seconds.
+Network successfully learned AND gate behaviour in 92 iterations and 0.170010 seconds.
+Network successfully learned AND gate behaviour in 554 iterations and 0.858049 seconds.
+Network successfully learned AND gate behaviour in 770 iterations and 1.442083 seconds.

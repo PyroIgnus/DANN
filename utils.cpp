@@ -103,29 +103,21 @@ int read_config(char *config_file)
 	return error_occurred ? -1 : 0;
 }
 
-<<<<<<< HEAD
-void readMNIST(char* image_filename, char* label_filename, int*** images, int* labels) {
-    char buff[MNIST_LENGTH+1];
-=======
-void readMNIST(char* image_filename, char* label_filename, int num, int*** images, int* labels) {
-    char buff[60001];
->>>>>>> 873ad5475208aeab78dd6262cd3248ca547d0845
+int readMNIST(char* image_filename, char* label_filename, int num, int*** images, int* labels) {
+    char buffimg[150];
+    char buff[num + 1];
     int imageNum = 0;
     int line = 0;
     // Load labels from file.
     FILE* label_file = fopen(label_filename, "r");
     if (label_file == NULL) {
         printf ("Error opening file: %s\n", label_filename);
-        return;
+        return -1;
     }
-    while (fgets(buff, MNIST_LENGTH+1, label_file) != NULL) {
-        for (int i = 0; i < strlen(buff); i++) {
-            char temp = buff[i];
-            labels[i] = temp - '0';
-            if (i % MNIST_PROGRESS_IND == 0) {
-                printf("Loading label: %d\n", i);
-            }
-        }
+    fgets(buff, num + 1, label_file);
+    for (int i = 0; i < strlen(buff); i++) {
+        char temp = buff[i];
+        labels[i] = temp - '0';
     }
     printf("Labels finished loading.\n");
     // Load image data from file.
@@ -134,52 +126,22 @@ void readMNIST(char* image_filename, char* label_filename, int num, int*** image
     FILE* image_file = fopen(image_filename, "r");
     if (image_file == NULL) {
         printf ("Error opening file: %s\n", image_filename);
-        return;
-<<<<<<< HEAD
+        return -1;
     }
-    char buffimg[115];
-    while (fgets(buffimg, 115, image_file) != NULL) {
+    while ((fgets(buffimg, 150, image_file) != NULL) && (imageNum < num)) {
         if (strcmp(buffimg, "\n") == 0) {
-=======
-    }
-    while (fgets(buff, 150, image_file) != NULL) {
-        if (strcmp(buff, "\n") == 0) {
->>>>>>> 873ad5475208aeab78dd6262cd3248ca547d0845
             line = 0;
             imageNum += 1;
-            if (imageNum % MNIST_PROGRESS_IND == 0) {
-                printf("Loading image: %d\n", imageNum);
-            }
         }
-        else{
-            images[imageNum][line][0] = atoi(strtok(buffimg, "\t"));
-            for (int i = 0; i < 28; i++) {
-                images[imageNum][line][i] = atoi(strtok(NULL, "\t"));
-            }
-            line += 1;
-        }
-<<<<<<< HEAD
-=======
         else {
-            images[imageNum][line][0] = atoi(strtok(buff, "\t"));
+            images[imageNum][line][0] = atoi(strtok(buffimg, "\t"));
             for (int i = 1; i < 28; i++) {
     //            sscanf(buff, "%d\t", &images[imageNum][line][i]);
                 images[imageNum][line][i] = atoi(strtok(NULL, "\t"));
             }
             line += 1;
         }
->>>>>>> 873ad5475208aeab78dd6262cd3248ca547d0845
     }
     printf("Images finished loading.\n");
-    return;
+    return 0;
 }
-
-//void printMNIST(int imageIndex) {
-//    printf("Image: %d which is a %d\n", imageIndex, labels[imageIndex]);
-//    for (int i = 0; i < 28; i++) {
-//        for (int j = 0; j < 28; j++) {
-//            printf("%d", images[imageIndex][i][j]);
-//        }
-//        printf("\n");
-//    }
-//}
