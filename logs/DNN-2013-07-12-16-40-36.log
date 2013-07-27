@@ -1,0 +1,20 @@
+Creating Neural Network.
+Cue initialization seed: 0
+Number of Reservoirs: 1
+Reservoir dimension size: 4x4x4
+Number of max inputs: 1000
+Max axon length: 0
+Max number of synapses: 0
+Search Radius: 0
+Action Potential: 0
+Threshold: 0
+Alpha learning rate(cue): 0.000000
+Beta learning rate(weight): 0.000000
+Creating Reservoir.
+Reservoir Successfully Created.
+Neural Network Successfully Created.
+Destroying Neural Network.
+Destroying Reservoir.
+Reservoir Successfully Destroyed.
+Neural Network Successfully destroyed.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

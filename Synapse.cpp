@@ -21,7 +21,7 @@ Synapse::Synapse(Neuron* target, Neuron* origin) {
 Synapse::Synapse(float weight, Neuron* target, Neuron* origin) {
     this->target = target;
     this->weight = weight;
-    lifespan = 3;
+    lifespan = 10;
     permanent = false;
     next = NULL;
     this->origin = origin;
