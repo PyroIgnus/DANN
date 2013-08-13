@@ -73,7 +73,7 @@ int main(int argc, char *argv[]) {
                     printf ("You do not have an active Neural Network running.\n");
                 }
                 else {
-                    net->trainMNIST(6000, 1000);
+                    net->trainMNIST(200, 50);
                 }
                 break;
             case 5:
@@ -89,7 +89,7 @@ int main(int argc, char *argv[]) {
                     logger (file, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
                 }
                 printf ("Starting new Neural Network:\n");
-                net = new NeuralNetwork();
+                net = new NeuralNetwork("reservoir_settings.config");
                 printf ("New Neural Network successfully created.\n");
                 break;
             case 8:

@@ -5,6 +5,7 @@
 #include "Neuron.h"
 #include "utils.h"
 #include "global.h"
+#include <vector>
 
 class NeuralNetwork
 {
@@ -50,9 +51,12 @@ class NeuralNetwork
 
         bool criticalPeriod;
         bool sensitivityPeriod;
-        Neuron* sensors[NUM_SENSORS];
-        Reservoir* reservoir[NUM_RESERVOIRS];
-        Neuron* motors[NUM_MOTORS];
+//        Neuron* sensors[NUM_SENSORS];
+        std::vector<Neuron*> sensors;
+//        Reservoir* reservoir[NUM_RESERVOIRS];
+        std::vector<Reservoir*> reservoir;
+//        Neuron* motors[NUM_MOTORS];
+        std::vector<Neuron*> motors;
 };
 
 #endif // NEURALNETWORK_H

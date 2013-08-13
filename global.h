@@ -6,6 +6,9 @@
 extern FILE *file;
 
 extern int CUE_SEED;
+extern int NUM_RESERVOIRS;
+extern int NUM_SENSORS;
+extern int NUM_MOTORS;
 extern int MAX_AXON_LENGTH;
 extern int MAX_SYNAPSES;
 extern int MAX_WEIGHT;

@@ -3,6 +3,9 @@
 FILE *file;
 
 int CUE_SEED;
+int NUM_RESERVOIRS;
+int NUM_SENSORS;
+int NUM_MOTORS;
 int MAX_AXON_LENGTH;
 int MAX_SYNAPSES;
 int MAX_WEIGHT;

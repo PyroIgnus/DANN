@@ -34,6 +34,12 @@ int process_config_line(char *line)
 	// Process this line.
 	if (strcmp(name, "CUE_SEED") == 0) {
         CUE_SEED = atoi(value);
+	} else if (strcmp(name, "NUM_RESERVOIRS") == 0) {
+	    NUM_RESERVOIRS = atoi(value);
+	} else if (strcmp(name, "NUM_SENSORS") == 0) {
+	    NUM_SENSORS = atoi(value);
+	} else if (strcmp(name, "NUM_MOTORS") == 0) {
+	    NUM_MOTORS = atoi(value);
 	} else if (strcmp(name, "MAX_AXON_LENGTH") == 0) {
         MAX_AXON_LENGTH = atoi(value);
 	} else if (strcmp(name, "MAX_SYNAPSES") == 0) {

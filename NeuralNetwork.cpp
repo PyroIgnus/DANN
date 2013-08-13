@@ -1,7 +1,9 @@
 #include "NeuralNetwork.h"
 #include <queue>
 #include <list>
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <sys/time.h>
 
@@ -28,13 +30,16 @@ NeuralNetwork::NeuralNetwork()
 
     // Create Neurons.
     for (int i = 0; i < numSensors; i++) {
-        sensors[i] = new Neuron(-10 - i - i, -10 - i - i, -10 - i - i);
+//        sensors[i] = new Neuron(-10 - i - i, -10 - i - i, -10 - i - i);
+        sensors.push_back(new Neuron(-10 - i - i, -10 - i - i, -10 - i - i));
     }
     for (int i = 0; i < numReservoirs; i++) {
-        reservoir[i] = new Reservoir(resDimension);
+//        reservoir[i] = new Reservoir(resDimension);
+        reservoir.push_back(new Reservoir(resDimension));
     }
     for (int i = 0; i < numMotors; i++) {
-        motors[i] = new Neuron(resDimension + 10 + i + i, resDimension + 10 + i + i, resDimension + 10 + i + i);
+//        motors[i] = new Neuron(resDimension + 10 + i + i, resDimension + 10 + i + i, resDimension + 10 + i + i);
+        motors.push_back(new Neuron(resDimension + 10 + i + i, resDimension + 10 + i + i, resDimension + 10 + i + i));
         motors[i]->makeOutput(true);
     }
     // Force link sensors and motors and reservoirs.  Unique to the network.
@@ -63,11 +68,97 @@ NeuralNetwork::NeuralNetwork()
     logger (file, "Neural Network Successfully Created.\n");
 }
 
-// Might not use.
+// Use for loading reservoir dimensions from file.
 NeuralNetwork::NeuralNetwork(char* filename)
 {
+    char buff[200];
+    sprintf(buff, "Creating Neural Network.\nCue initialization seed: %d\nNumber of Reservoirs: %d\nReservoir dimension size: %dx%dx%d\nNumber of max inputs: %d\nMax axon length: %d\nMax number of synapses: %d\n",
+            CUE_SEED, NUM_RESERVOIRS, MAX_RES_SIZE, MAX_RES_SIZE, MAX_RES_SIZE, MAX_INPUTS, MAX_AXON_LENGTH, MAX_SYNAPSES);
+    logger (file, buff);
+    sprintf(buff, "Search Radius: %d\nAction Potential: %d\nThreshold: %d\nAlpha learning rate(cue): %f\nBeta learning rate(weight): %f\nSynapse lifespan increase: %f\nSynapse lifespan decrease: %f\n",
+            SEARCH_RADIUS, ACTION_POTENTIAL, THRESHOLD, CUE_CHANGE, WEIGHT_CHANGE, LIFESPAN_INCREASE, LIFESPAN_DECREASE);
+    logger (file, buff);
+    numReservoirs = NUM_RESERVOIRS;
+    resDimension = MAX_RES_SIZE;
+    numSensors = NUM_SENSORS;
+    numMotors = NUM_MOTORS;
+    maxInputs = MAX_INPUTS;
+    maxAxonLength = MAX_AXON_LENGTH;
+    maxSynapses = MAX_SYNAPSES;
 
+    criticalPeriod = false;
+    sensitivityPeriod = false;
 
+    // Create Neurons.
+    for (int i = 0; i < numSensors; i++) {
+//        sensors[i] = new Neuron(-10 - i - i, -10 - i - i, -10 - i - i);
+        sensors.push_back(new Neuron(-10 - i - i, -10 - i - i, -10 - i - i));
+    }
+    // Load reservoir settings from file.
+    FILE* resFile = fopen(filename, "r");
+    if (resFile == NULL)
+        printf("File was not opened successfully.\n");
+    for (int i = 0; i < numReservoirs; ) {
+        // Process the config file.
+        while (!feof(resFile)) {
+            // Read a line from the file.
+            char line[150];
+            char *l = fgets(line, sizeof line, resFile);
+
+            // Process the line.
+            if (l == line) {
+                // Ignore comments.
+                if (!(line[0] == CONFIG_COMMENT_CHAR || strncmp(line,"\n",1)==0)) {
+                    // Extract config parameter name and value.
+                    char name[100];
+                    char value[50];
+                    int items = sscanf(line, "%s %s\n", name, value);
+
+                    // Process this line.
+                    if (strcmp(name, "RANDOM") == 0) {
+                        // Only read the dimensions from value.
+                        int temp[3];
+                        sscanf(value, "%d,%d,%d", &temp[0], &temp[1], &temp[2]);
+                        reservoir.push_back(new Reservoir(temp[0], temp[1], temp[2]));
+                        i += 1;
+                    } else {
+                        // Read specific reservoir file settings here.
+                    }
+                }
+            }
+            else if (!feof(resFile))
+                printf("Error occurred while reading the file.\n");
+        }
+    }
+    for (int i = 0; i < numMotors; i++) {
+//        motors[i] = new Neuron(resDimension + 10 + i + i, resDimension + 10 + i + i, resDimension + 10 + i + i);
+        motors.push_back(new Neuron(resDimension + 10 + i + i, resDimension + 10 + i + i, resDimension + 10 + i + i));
+        motors[i]->makeOutput(true);
+    }
+    // Force link sensors and motors and reservoirs.  Unique to the network.
+    int sensorCount = 0;
+    for (int i = 0; i < 16; i++) {
+        for (int j = 0; j < 7; j++) {
+            for (int k = 0; k < 7; k++) {
+                linkSensor(sensors[sensorCount], reservoir[i]->getNeuron(0, j, k));
+                sensorCount += 1;
+            }
+        }
+    }
+    int counter = 0;
+    for (int i = 0; i < 16; i++) {
+        linkReservoir(reservoir[i]->getNeuron(6, 3, 3), reservoir[16]->getNeuron(0, 3 + (i > 6) + (i > 11), counter % 7));
+        counter += 1;
+    }
+//    linkReservoir(reservoir[0]->getNeuron(1, 1, 0), reservoir[1]->getNeuron(0, 1, 1));
+//    linkReservoir(reservoir[1]->getNeuron(1, 1, 0), reservoir[1]->getNeuron(1, 1, 2));
+    counter = 0;
+    for (int i = 0; i < numMotors; i++) {
+        linkMotor(reservoir[16]->getNeuron(resDimension - 1, 3 + (i > 6), counter % 7), motors[i]);
+        counter += 1;
+    }
+
+    logger (file, "Neural Network Successfully Created.\n");
 }
 
 void NeuralNetwork::linkSensor(Neuron* sensor, Neuron* target) {
@@ -372,19 +463,30 @@ void NeuralNetwork::trainMNIST(int numTrain, int numTest) {
 
     // Method to train MNIST data.
     for (int i = 0; i < numTrain; i++) {
-        if (i % (numTrain/8) == 0 && (i != 0)) {
-            printf ("Completed another 12.5%% of training.\n");
+        if (i % (numTrain/10) == 0 && (i != 0)) {
+            printf ("Completed %.1f%% of training.\n", (((float) i / (float) numTrain) * 100));
         }
         updateSensorsMNIST(trainValues[i]);
         process(true);
+        if (i % (numTrain/10) == 0) {
+            printf("At iteration %d, output:\n", i);
+            printf("0 1 2 3 4 5 6 7 8 9\n");
+        }
         for (int j = 0; j < numMotors; j++) {
-//            if (motors[j]->isTriggered()) {
-//                printf ("Motor %d turned on.\n", j);
-//            }
+            if (i % (numTrain/10) == 0) {
+                if (motors[j]->isTriggered())
+                    printf ("* ");
+                else {
+                    printf("  ");
+                }
+            }
             if (motors[j]->isTriggered() && (j != trainLabels[i]) || (!motors[j]->isTriggered() && (j == trainLabels[i]))) {
                 updateCues(motors[j], motors[j]->isTriggered());
             }
             motors[j]->resetTrigger();
+        }
+        if (i % (numTrain/10) == 0) {
+            printf("\n");
         }
     }
     printf ("Training Complete.\n");
@@ -395,19 +497,20 @@ void NeuralNetwork::trainMNIST(int numTrain, int numTest) {
     int correct = 0;
     int partially[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
     for (int i = 0; i < numTest; i++) {
-        if (i % (numTest/8) == 0 && (i != 0)) {
-            printf ("Completed another 12.5%% of testing.\n");
+        if (i % (numTest/10) == 0 && (i != 0)) {
+            printf ("Completed %.1f%% of testing.\n", (((float) i / (float) numTest) * 100));
         }
         updateSensorsMNIST(testValues[i]);
         process(false);
         if (motors[testLabels[i]]->isTriggered()) {
             right = true;
         }
-        if (i % 100 == 0) {
+        if (i % (numTest/10) == 0) {
+            printf("At iteration %d, output:\n", i);
             printf("0 1 2 3 4 5 6 7 8 9\n");
         }
         for (int j = 0; j < numMotors; j++) {
-            if (i % 100 == 0) {
+            if (i % (numTest/10) == 0) {
                 if (motors[j]->isTriggered())
                     printf ("* ");
                 else {
@@ -425,6 +528,9 @@ void NeuralNetwork::trainMNIST(int numTrain, int numTest) {
                 motors[j]->resetTrigger();
             }
         }
+        if (i % (numTest/10) == 0) {
+            printf("\n");
+        }
         if (right) {
             if (wrong > 0) {
                 partially[wrong - 1] += 1;
@@ -434,7 +540,6 @@ void NeuralNetwork::trainMNIST(int numTrain, int numTest) {
             }
             right = false;
         }
-        printf ("\n");
         wrong = 0;
     }
 
@@ -622,10 +727,15 @@ void NeuralNetwork::updateCues(Neuron* motor, bool reinforce) {
     Synapse* curr;
     // Update weights based on the targets' cue values and reset triggers.
     for (int res = 0; res < numReservoirs; res++) {
-        for (int i = 0; i < resDimension; i++) {
-            for (int j = 0; j < resDimension; j++) {
-                for (int k = 0; k < resDimension; k++) {
-                    current = reservoir[res]->getNeuron(i, j, k);
+        Reservoir* currRes = reservoir[res];
+        int resSize[3];
+        resSize[0] = currRes->getResDim(0);
+        resSize[1] = currRes->getResDim(1);
+        resSize[2] = currRes->getResDim(2);
+        for (int i = 0; i < resSize[0]; i++) {
+            for (int j = 0; j < resSize[1]; j++) {
+                for (int k = 0; k < resSize[2]; k++) {
+                    current = currRes->getNeuron(i, j, k);
                     current->resetTrigger();
                     curr = current->getAxon()->getSynapseHead();
                     int numSyn = current->getAxon()->getNumSynapses();

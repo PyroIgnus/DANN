@@ -8,11 +8,11 @@
 #define MNIST_TEST_IMAGES "MNIST/Itest.txt"
 #define MNIST_TEST_LABELS "MNIST/labeltest.txt"
 
-#define NUM_RESERVOIRS 17
+//#define NUM_RESERVOIRS 17
 //#define CUE_SEED 0
 #define MAX_RES_SIZE 7
-#define NUM_SENSORS 784
-#define NUM_MOTORS 10
+//#define NUM_SENSORS 784
+//#define NUM_MOTORS 10
 #define MAX_INPUTS 1000
 //#define MAX_AXON_LENGTH 2
 //#define MAX_SYNAPSES 10000

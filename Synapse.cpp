@@ -21,7 +21,7 @@ Synapse::Synapse(Neuron* target, Neuron* origin) {
 Synapse::Synapse(float weight, Neuron* target, Neuron* origin) {
     this->target = target;
     this->weight = weight;
-    lifespan = 10;
+    lifespan = 2;
     permanent = false;
     next = NULL;
     this->origin = origin;
@@ -89,7 +89,7 @@ float Synapse::getLifespan() {
 
 Synapse::~Synapse()
 {
-    target->removeConnection(origin);
+//    target->removeConnection(origin);
 }
 
 void Synapse::deleteAll() {
