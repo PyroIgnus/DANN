@@ -25,4 +25,6 @@ extern float WEIGHT_CHANGE;
 extern float LIFESPAN_INCREASE;
 extern float LIFESPAN_DECREASE;
 
+extern int numNeurons;
+
 #endif // GLOBAL_H

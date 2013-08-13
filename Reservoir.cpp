@@ -54,6 +54,7 @@ Reservoir::Reservoir(int x, int y, int z)
             for (int k = 0; k < resSize[2]; k++) {
                 cue = (float)rand()/((float)RAND_MAX/2) - 1;    // A random float value between -1 and 1.
                 neurons[i][j][k] = new Neuron(i, j, k, cue, this);
+                numNeurons += 1;
             }
         }
     }
@@ -73,7 +74,8 @@ Neuron* Reservoir::getNeuron (int x, int y, int z) {
 }
 
 int Reservoir::getResDim (int dim) {
-    return resSize[dim];
+    int resDim = resSize[dim];
+    return resDim;
 }
 
 Reservoir::~Reservoir()

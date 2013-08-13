@@ -21,3 +21,5 @@ float CUE_CHANGE;
 float WEIGHT_CHANGE;
 float LIFESPAN_INCREASE;
 float LIFESPAN_DECREASE;
+
+int numNeurons;

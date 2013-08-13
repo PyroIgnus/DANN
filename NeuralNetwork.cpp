@@ -132,30 +132,23 @@ NeuralNetwork::NeuralNetwork(char* filename)
     }
     for (int i = 0; i < numMotors; i++) {
 //        motors[i] = new Neuron(resDimension + 10 + i + i, resDimension + 10 + i + i, resDimension + 10 + i + i);
-        motors.push_back(new Neuron(resDimension + 10 + i + i, resDimension + 10 + i + i, resDimension + 10 + i + i));
+        motors.push_back(new Neuron(reservoir[0]->getResDim(0) + 10 + i + i, reservoir[0]->getResDim(1) + 10 + i + i, reservoir[0]->getResDim(2) + 10 + i + i));
         motors[i]->makeOutput(true);
     }
     // Force link sensors and motors and reservoirs.  Unique to the network.
     int sensorCount = 0;
-    for (int i = 0; i < 16; i++) {
-        for (int j = 0; j < 7; j++) {
-            for (int k = 0; k < 7; k++) {
-                linkSensor(sensors[sensorCount], reservoir[i]->getNeuron(0, j, k));
-                sensorCount += 1;
-            }
+    for (int i = 0; i < 28; i++) {
+        for (int j = 0; j < 28; j++) {
+            linkSensor(sensors[sensorCount], reservoir[0]->getNeuron(i, j, 0));
+            sensorCount += 1;
         }
-    }
-    int counter = 0;
-    for (int i = 0; i < 16; i++) {
-        linkReservoir(reservoir[i]->getNeuron(6, 3, 3), reservoir[16]->getNeuron(0, 3 + (i > 6) + (i > 11), counter % 7));
-        counter += 1;
     }
 //    linkReservoir(reservoir[0]->getNeuron(1, 1, 0), reservoir[1]->getNeuron(0, 1, 1));
 //    linkReservoir(reservoir[1]->getNeuron(1, 1, 0), reservoir[1]->getNeuron(1, 1, 2));
-    counter = 0;
-    for (int i = 0; i < numMotors; i++) {
-        linkMotor(reservoir[16]->getNeuron(resDimension - 1, 3 + (i > 6), counter % 7), motors[i]);
-        counter += 1;
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 3; j++) {
+            linkMotor(reservoir[0]->getNeuron(i * 6 + 2, j * 8 + 2, reservoir[0]->getResDim(2) - 1), motors[i]);
+        }
     }
 
     logger (file, "Neural Network Successfully Created.\n");
